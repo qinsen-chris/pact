@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gclfax.modules.pact.dao.ActivityBaseDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gclfax.modules.pact.entity.ActivityBaseEntity" id="activityBaseMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="startDate" column="start_date"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endDate" column="end_date"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.gclfax.modules.pact.entity.ActivityBaseEntity">
+		select * from t_activity_base where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.gclfax.modules.pact.entity.ActivityBaseEntity">
+		select * from t_activity_base
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_activity_base 
+	</select>
+	 
+	<insert id="save" parameterType="com.gclfax.modules.pact.entity.ActivityBaseEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_activity_base
+		(
+			`name`, 
+			`type`, 
+			`start_date`, 
+			`start_time`, 
+			`end_date`, 
+			`end_time`
+		)
+		values
+		(
+			#{name}, 
+			#{type}, 
+			#{startDate}, 
+			#{startTime}, 
+			#{endDate}, 
+			#{endTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.gclfax.modules.pact.entity.ActivityBaseEntity">
+		update t_activity_base 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="startDate != null">`start_date` = #{startDate}, </if>
+			<if test="startTime != null">`start_time` = #{startTime}, </if>
+			<if test="endDate != null">`end_date` = #{endDate}, </if>
+			<if test="endTime != null">`end_time` = #{endTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_activity_base where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_activity_base where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

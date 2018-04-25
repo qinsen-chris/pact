@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gclfax.modules.pact.dao.AnswerRecordsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gclfax.modules.pact.entity.AnswerRecordsEntity" id="answerRecordsMap">
+        <result property="id" column="id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="equipId" column="equip_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="answerTime" column="answer_time"/>
+        <result property="answerResult" column="answer_result"/>
+        <result property="bountyNum" column="bounty_num"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.gclfax.modules.pact.entity.AnswerRecordsEntity">
+		select * from t_answer_records where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.gclfax.modules.pact.entity.AnswerRecordsEntity">
+		select * from t_answer_records
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_answer_records 
+	</select>
+	 
+	<insert id="save" parameterType="com.gclfax.modules.pact.entity.AnswerRecordsEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_answer_records
+		(
+			`activity_id`, 
+			`equip_id`, 
+			`user_id`, 
+			`answer_time`, 
+			`answer_result`, 
+			`bounty_num`
+		)
+		values
+		(
+			#{activityId}, 
+			#{equipId}, 
+			#{userId}, 
+			#{answerTime}, 
+			#{answerResult}, 
+			#{bountyNum}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.gclfax.modules.pact.entity.AnswerRecordsEntity">
+		update t_answer_records 
+		<set>
+			<if test="activityId != null">`activity_id` = #{activityId}, </if>
+			<if test="equipId != null">`equip_id` = #{equipId}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="answerTime != null">`answer_time` = #{answerTime}, </if>
+			<if test="answerResult != null">`answer_result` = #{answerResult}, </if>
+			<if test="bountyNum != null">`bounty_num` = #{bountyNum}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_answer_records where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_answer_records where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

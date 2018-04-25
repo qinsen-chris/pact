@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gclfax.modules.pact.dao.UserAwardsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gclfax.modules.pact.entity.UserAwardsEntity" id="userAwardsMap">
+        <result property="id" column="id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="equipId" column="equip_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="answerId" column="answer_id"/>
+        <result property="partBounty" column="part_bounty"/>
+        <result property="assitBounty" column="assit_bounty"/>
+        <result property="isAccept" column="is_accept"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.gclfax.modules.pact.entity.UserAwardsEntity">
+		select * from t_user_awards where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.gclfax.modules.pact.entity.UserAwardsEntity">
+		select * from t_user_awards
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_user_awards 
+	</select>
+	 
+	<insert id="save" parameterType="com.gclfax.modules.pact.entity.UserAwardsEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_user_awards
+		(
+			`activity_id`, 
+			`equip_id`, 
+			`user_id`, 
+			`answer_id`, 
+			`part_bounty`, 
+			`assit_bounty`, 
+			`is_accept`, 
+			`create_time`
+		)
+		values
+		(
+			#{activityId}, 
+			#{equipId}, 
+			#{userId}, 
+			#{answerId}, 
+			#{partBounty}, 
+			#{assitBounty}, 
+			#{isAccept}, 
+			#{createTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.gclfax.modules.pact.entity.UserAwardsEntity">
+		update t_user_awards 
+		<set>
+			<if test="activityId != null">`activity_id` = #{activityId}, </if>
+			<if test="equipId != null">`equip_id` = #{equipId}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="answerId != null">`answer_id` = #{answerId}, </if>
+			<if test="partBounty != null">`part_bounty` = #{partBounty}, </if>
+			<if test="assitBounty != null">`assit_bounty` = #{assitBounty}, </if>
+			<if test="isAccept != null">`is_accept` = #{isAccept}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_user_awards where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_user_awards where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

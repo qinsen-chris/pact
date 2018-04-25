@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gclfax.modules.pact.dao.QuestionOptionsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gclfax.modules.pact.entity.QuestionOptionsEntity" id="questionOptionsMap">
+        <result property="id" column="id"/>
+        <result property="questionId" column="question_id"/>
+        <result property="content" column="content"/>
+        <result property="isCorrect" column="is_correct"/>
+        <result property="order" column="order"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.gclfax.modules.pact.entity.QuestionOptionsEntity">
+		select * from t_question_options where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.gclfax.modules.pact.entity.QuestionOptionsEntity">
+		select * from t_question_options
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_question_options 
+	</select>
+	 
+	<insert id="save" parameterType="com.gclfax.modules.pact.entity.QuestionOptionsEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_question_options
+		(
+			`question_id`, 
+			`content`, 
+			`is_correct`, 
+			`order`
+		)
+		values
+		(
+			#{questionId}, 
+			#{content}, 
+			#{isCorrect}, 
+			#{order}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.gclfax.modules.pact.entity.QuestionOptionsEntity">
+		update t_question_options 
+		<set>
+			<if test="questionId != null">`question_id` = #{questionId}, </if>
+			<if test="content != null">`content` = #{content}, </if>
+			<if test="isCorrect != null">`is_correct` = #{isCorrect}, </if>
+			<if test="order != null">`order` = #{order}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_question_options where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_question_options where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

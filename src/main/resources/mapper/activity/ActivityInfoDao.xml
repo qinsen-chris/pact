@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gclfax.modules.pact.dao.ActivityInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gclfax.modules.pact.entity.ActivityInfoEntity" id="activityInfoMap">
+        <result property="id" column="id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="freePartNum" column="free_part_num"/>
+        <result property="shareAddNum" column="share_add_num"/>
+        <result property="maxPartNum" column="max_part_num"/>
+        <result property="minXinbi" column="min_xinbi"/>
+        <result property="maxXinbi" column="max_xinbi"/>
+        <result property="minBounty" column="min_bounty"/>
+        <result property="maxBounty" column="max_bounty"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.gclfax.modules.pact.entity.ActivityInfoEntity">
+		select * from t_activity_info where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.gclfax.modules.pact.entity.ActivityInfoEntity">
+		select * from t_activity_info
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_activity_info 
+	</select>
+	 
+	<insert id="save" parameterType="com.gclfax.modules.pact.entity.ActivityInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_activity_info
+		(
+			`activity_id`, 
+			`free_part_num`, 
+			`share_add_num`, 
+			`max_part_num`, 
+			`min_xinbi`, 
+			`max_xinbi`, 
+			`min_bounty`, 
+			`max_bounty`
+		)
+		values
+		(
+			#{activityId}, 
+			#{freePartNum}, 
+			#{shareAddNum}, 
+			#{maxPartNum}, 
+			#{minXinbi}, 
+			#{maxXinbi}, 
+			#{minBounty}, 
+			#{maxBounty}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.gclfax.modules.pact.entity.ActivityInfoEntity">
+		update t_activity_info 
+		<set>
+			<if test="activityId != null">`activity_id` = #{activityId}, </if>
+			<if test="freePartNum != null">`free_part_num` = #{freePartNum}, </if>
+			<if test="shareAddNum != null">`share_add_num` = #{shareAddNum}, </if>
+			<if test="maxPartNum != null">`max_part_num` = #{maxPartNum}, </if>
+			<if test="minXinbi != null">`min_xinbi` = #{minXinbi}, </if>
+			<if test="maxXinbi != null">`max_xinbi` = #{maxXinbi}, </if>
+			<if test="minBounty != null">`min_bounty` = #{minBounty}, </if>
+			<if test="maxBounty != null">`max_bounty` = #{maxBounty}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_activity_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_activity_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

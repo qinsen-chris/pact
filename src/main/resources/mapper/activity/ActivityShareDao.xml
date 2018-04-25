@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gclfax.modules.pact.dao.ActivityShareDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.gclfax.modules.pact.entity.ActivityShareEntity" id="activityShareMap">
+        <result property="id" column="id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="equipId" column="equip_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="shareTime" column="share_time"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.gclfax.modules.pact.entity.ActivityShareEntity">
+		select * from t_activity_share where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.gclfax.modules.pact.entity.ActivityShareEntity">
+		select * from t_activity_share
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from t_activity_share 
+	</select>
+	 
+	<insert id="save" parameterType="com.gclfax.modules.pact.entity.ActivityShareEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into t_activity_share
+		(
+			`activity_id`, 
+			`equip_id`, 
+			`user_id`, 
+			`share_time`
+		)
+		values
+		(
+			#{activityId}, 
+			#{equipId}, 
+			#{userId}, 
+			#{shareTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.gclfax.modules.pact.entity.ActivityShareEntity">
+		update t_activity_share 
+		<set>
+			<if test="activityId != null">`activity_id` = #{activityId}, </if>
+			<if test="equipId != null">`equip_id` = #{equipId}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="shareTime != null">`share_time` = #{shareTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from t_activity_share where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from t_activity_share where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
