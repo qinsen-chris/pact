@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gclfax.modules.pact.dao.PactVersionDao" >
+  <resultMap id="BaseResultMap" type="com.gclfax.modules.pact.entity.PactVersionEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="pact_path" property="pactPath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="pact_template_id" property="pactTemplateId" jdbcType="BIGINT" />
+  </resultMap>
+
+  <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactVersionEntity" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_pact_version (pact_path, create_time, pact_template_id )
+    values (#{pactPath}, #{createTime}, #{pactTemplateId})
+  </insert>
+
+  <select id="queryObject" resultType="com.gclfax.modules.pact.entity.PactVersionEntity">
+    select id, pact_path, create_time, pact_template_id
+    from t_pact_version
+    where id = #{id}
+  </select>
+
+  <select id="getMapById" resultType="map">
+    select id, pact_path, create_time, pact_template_id
+    from t_pact_version
+    where id = #{id}
+  </select>
+
+</mapper>
