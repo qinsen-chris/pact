@@ -7,9 +7,51 @@
     <result column="dict_value" property="dictValue" jdbcType="VARCHAR" />
   </resultMap>
 
-  <insert id="insert" parameterType="com.gclfax.modules.pact.entity.PactDictEntity" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactDictEntity" useGeneratedKeys="true" keyProperty="id" >
     insert into t_pact_dict (dict_key, dict_value)
     values (#{dictKey,jdbcType=VARCHAR}, #{dictValue,jdbcType=VARCHAR})
   </insert>
+
+  <select id="queryList" resultType="com.gclfax.modules.pact.entity.PactDictEntity">
+    select id,dict_key,dict_value from t_pact_dict
+    <where>
+      <if test="dictKey != null and dictKey.trim() != ''">
+        and `dict_key` like concat('%',#{dictKey},'%')
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    select count(1) from t_pact_dict
+    <where>
+      <if test="dictKey != null and dictKey.trim() != ''">
+        and `dict_key` like concat('%',#{dictKey},'%')
+      </if>
+    </where>
+  </select>
+
+  <update id="update" parameterType="com.gclfax.modules.pact.entity.PactDictEntity">
+    update t_pact_dict
+    <set>
+      <if test="dictKey != null">`dict_key` = #{dictKey}, </if>
+      <if test="dictValue != null">`dict_value` = #{dictValue}, </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteBatch">
+    delete from t_pact_dict where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
 
 </mapper>

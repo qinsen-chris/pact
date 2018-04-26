@@ -29,12 +29,12 @@ public class PactDictServiceImpl implements PactDictService {
     }
 
     @Override
-    public int delete(Long pactDictId) {
-        return pactDictDao.delete(pactDictId);
+    public int deleteBatch(Long[] pactIds) {
+        return pactDictDao.deleteBatch(pactIds);
     }
 
     @Override
-    public int queryTotal() {
+    public int queryTotal(Map<String, Object> map) {
         return pactDictDao.queryTotal();
     }
 

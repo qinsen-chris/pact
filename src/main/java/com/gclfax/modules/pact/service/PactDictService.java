@@ -15,9 +15,11 @@ public interface PactDictService {
 
     int update(PactDictEntity pactDictEntity);
 
-    int delete(Long pactDictId);
-
-    int queryTotal();
+    int deleteBatch(Long[] pactIds);
+    /**
+     * 查询总数
+     */
+    int queryTotal(Map<String, Object> map);
 
     List<PactDictEntity> queryList(Map<String, Object> map);
 
