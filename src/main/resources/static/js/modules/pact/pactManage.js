@@ -58,9 +58,10 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-
 			vm.pact = {};
-			vm.platformEnum = {};
+
+			vm.selectpickerfunc();
+
 		},
 		update: function () {
 			var pactId = getSelectedRow();
@@ -72,8 +73,7 @@ var vm = new Vue({
 			vm.showList = false;
             vm.title = "修改";
 			vm.pact = getRow;
-			//vm.getPactTemplate(pactId);
-
+			vm.getPactTemplate();
 		},
 		del: function () {
 			var pactIds = getSelectedRows();
@@ -121,11 +121,25 @@ var vm = new Vue({
 				}
 			});
 		},
-		getPactTemplate: function(pactId){
-			$.get(baseURL + "pactTemplate/info/"+pactId, function(r){
-				vm.pact = r.pact;
-
+		getPactTemplate: function(){
+			$.get(baseURL + "common/platformList", function(r){
+				vm.platformEnum = r.platformEnum;
 			});
+		},
+		selectpickerfunc:function(){
+		    $("#platformSelect").selectpicker({
+		        noneSelectedText : '请选择'
+            });
+
+			$.get(baseURL + "common/platformList", function(r){
+        		vm.platformEnum = r.platformEnum;
+                for (var i = 0; i < r.platformEnum.length; i++) {
+                    $("#platformSelect").append("<option value="+r.platformEnum[i]+">"+ r.platformEnum[i] + "</option>");
+                }
+            });
+            $("#platformSelect").selectpicker();
+            $("#platformSelect").selectpicker('refresh');
+            $("#platformSelect").selectpicker('render');
 		},
 		reload: function () {
 			vm.showList = true;

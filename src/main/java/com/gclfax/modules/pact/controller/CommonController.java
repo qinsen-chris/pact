@@ -1,5 +1,6 @@
 package com.gclfax.modules.pact.controller;
 
+import com.gclfax.common.constants.PlatformEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import com.gclfax.modules.pact.service.CommonService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 活动平台公共接口
@@ -44,4 +48,18 @@ public class CommonController {
 		return R.ok();
 	}
 
+	/**
+	 * 获取平台列表
+	 * @return
+	 */
+	@RequestMapping("/platformList")
+	public R platformList(){
+		List<String> platformList = new ArrayList<String>();
+		platformList.add(PlatformEnum.GXS_CG.getCode());
+		platformList.add(PlatformEnum.GXS_HF.getCode());
+
+		R r =  R.ok();
+		r.put("platformEnum",platformList);
+		return r;
+	}
 }
