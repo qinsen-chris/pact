@@ -8,8 +8,66 @@
     <result column="new_version_id" property="newVersionId" jdbcType="BIGINT" />
     <result column="platform" property="platform" jdbcType="VARCHAR" />
   </resultMap>
+
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactTemplateEntity" useGeneratedKeys="true" keyProperty="id" >
     insert into t_pact_template (name, create_time, new_version_id, platform)
     values (#{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{newVersionId,jdbcType=BIGINT}, #{platform,jdbcType=VARCHAR})
   </insert>
+
+  <select id="queryObject" resultType="com.gclfax.modules.pact.entity.PactTemplateEntity">
+    select * from t_pact_template where id = #{value}
+  </select>
+
+  <update id="update" parameterType="com.gclfax.modules.pact.entity.PactTemplateEntity">
+    update t_pact_template
+    <set>
+      <if test="platform != null">`platform` = #{platform}, </if>
+      <if test="name != null">`name` = #{name}, </if>
+      <if test="newVersionId != null">`new_version_id` = #{newVersionId}, </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteBatch">
+    delete from t_pact_template where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <select id="queryList" resultType="com.gclfax.modules.pact.entity.PactTemplateEntity">
+    select * from t_pact_template
+    <where>
+      <if test="platform != null and platform.trim() != ''">
+        and `platform` =#{platform}
+      </if>
+      <if test="name != null and name.trim() != ''">
+        and `name` like concat('%',#{name},'%')
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <select id="queryTotal" resultType="int">
+    select count(*) from t_pact_template
+    <where>
+      <if test="platform != null">
+        and `platform` =#{platform}
+      </if>
+      <if test="name != null and name.trim() != ''">
+        and `name` like concat('%',#{name},'%')
+      </if>
+    </where>
+  </select>
+
+
 </mapper>

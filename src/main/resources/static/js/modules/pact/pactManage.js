@@ -1,10 +1,12 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/user/list',
+        url: baseURL + 'pactTemplate/list',
         datatype: "json",
-        colModel: [			
-			{ label: '平台标识', name: 'userId', index: "user_id", width: 45, key: true },
-			{ label: '模板名称', name: 'username', width: 75 },
+        colModel: [
+            { label: '模板id', name: 'id', index: "id", width: 0, key: true ,hidden:true},
+			{ label: '平台标识', name: 'platform', index: "platform", width: 45 },
+			{ label: '模板名称', name: 'name',index: "name",  width: 75 },
+			{ label: '最新版本号', name: 'newVersionId',index: "newVersionId", width: 20 },
 			{ label: '创建时间', name: 'createTime', index: "create_time", width: 80}
         ],
 		viewrecords: true,
@@ -20,7 +22,8 @@ $(function () {
             root: "page.list",
             page: "page.currPage",
             total: "page.totalPage",
-            records: "page.totalCount"
+            records: "page.totalCount",
+            platformEnum:"platformEnum"
         },
         prmNames : {
             page:"page", 
@@ -38,15 +41,15 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		q:{
-			username: null
+			platform: null,
+			name: null
 		},
 		showList: true,
 		title:null,
-		roleList:{},
-		user:{
-			status:1,
-			roleIdList:[]
-		}
+		pact:{
+		},
+		platformEnum:null
+
 	},
 	methods: {
 		query: function () {
@@ -55,37 +58,35 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.roleList = {};
-			vm.user = {status:1,roleIdList:[]};
-			
-			//获取角色信息
-			this.getRoleList();
+
+			vm.pact = {};
+			vm.platformEnum = {};
 		},
 		update: function () {
-			var userId = getSelectedRow();
-			if(userId == null){
+			var pactId = getSelectedRow();
+			if(pactId == null){
+			    alert("文档数据有问题，id不能为空！");
 				return ;
 			}
-			
+			var getRow = $('#jqGrid').getRowData(pactId);//获取当前的数据行
 			vm.showList = false;
             vm.title = "修改";
-			
-			vm.getUser(userId);
-			//获取角色信息
-			this.getRoleList();
+			vm.pact = getRow;
+			//vm.getPactTemplate(pactId);
+
 		},
 		del: function () {
-			var userIds = getSelectedRows();
-			if(userIds == null){
+			var pactIds = getSelectedRows();
+			if(pactIds == null){
 				return ;
 			}
 			
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "sys/user/delete",
+				    url: baseURL + "pactTemplate/delete",
                     contentType: "application/json",
-				    data: JSON.stringify(userIds),
+				    data: JSON.stringify(pactIds),
 				    success: function(r){
 						if(r.code == 0){
 							alert('操作成功', function(){
@@ -103,12 +104,12 @@ var vm = new Vue({
                 return ;
             }
 
-			var url = vm.user.userId == null ? "sys/user/save" : "sys/user/update";
+			var url = vm.pact.id == null ? "pactTemplate/save" : "pactTemplate/update" ;
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.user),
+			    data: JSON.stringify(vm.pact),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(){
@@ -120,45 +121,31 @@ var vm = new Vue({
 				}
 			});
 		},
-		getUser: function(userId){
-			$.get(baseURL + "sys/user/info/"+userId, function(r){
-				vm.user = r.user;
-				vm.user.password = null;
-			});
-		},
-		getRoleList: function(){
-			$.get(baseURL + "sys/role/select", function(r){
-				vm.roleList = r.list;
+		getPactTemplate: function(pactId){
+			$.get(baseURL + "pactTemplate/info/"+pactId, function(r){
+				vm.pact = r.pact;
+
 			});
 		},
 		reload: function () {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
+			var platformEnum = $("#jqGrid").jqGrid('getGridParam','platformEnum');
 			$("#jqGrid").jqGrid('setGridParam',{ 
-                postData:{'username': vm.q.username},
+                postData:{'platform': vm.q.platform,'name':vm.q.name},
                 page:page
             }).trigger("reloadGrid");
 		},
         validator: function () {
-            if(isBlank(vm.user.username)){
-                alert("用户名不能为空");
+            if(isBlank(vm.pact.platform)){
+                alert("平台标识不能为空");
                 return true;
             }
 
-            if(vm.user.userId == null && isBlank(vm.user.password)){
-                alert("密码不能为空");
+            if(vm.pact.name == null && isBlank(vm.pact.name)){
+                alert("文档名称不能为空");
                 return true;
             }
-
-            if(isBlank(vm.user.email)){
-                alert("邮箱不能为空");
-                return true;
-            }
-
-            if(!validator.isEmail(vm.user.email)){
-                alert("邮箱格式不正确");
-                return true;
-			}
         }
 	}
 });
