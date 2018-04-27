@@ -104,17 +104,6 @@ public class PactTemplateController {
      */
     @RequestMapping("/upload")
     public R upload(@RequestParam("file") MultipartFile file,@RequestParam("platform") String platform) throws Exception {
-        //获取跟目录
-        String paths = ClassUtils.getDefaultClassLoader().getResource("").getPath();
-        System.out.println("paths:"+paths);
-
-
-        File path = new File(ResourceUtils.getURL("classpath:").getPath());
-        if(!path.exists()){
-            path = new File("");
-        }
-        System.out.println("path:"+path.getAbsolutePath());
-
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空！");
         }
