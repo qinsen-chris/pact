@@ -5,13 +5,14 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="new_version_id" property="newVersionId" jdbcType="BIGINT" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
     <result column="platform" property="platform" jdbcType="VARCHAR" />
   </resultMap>
 
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactTemplateEntity" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_pact_template (name, create_time, new_version_id, platform)
-    values (#{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{newVersionId,jdbcType=BIGINT}, #{platform,jdbcType=VARCHAR})
+    insert into t_pact_template (name, create_time, version,file_path, platform)
+    values (#{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER},#{filePath,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR})
   </insert>
 
   <select id="queryObject" resultType="com.gclfax.modules.pact.entity.PactTemplateEntity">
@@ -23,7 +24,9 @@
     <set>
       <if test="platform != null">`platform` = #{platform}, </if>
       <if test="name != null">`name` = #{name}, </if>
-      <if test="newVersionId != null">`new_version_id` = #{newVersionId}, </if>
+      <if test="createTime != null">`create_time` = #{createTime}, </if>
+      <if test="version != null">`version` = #{version}, </if>
+      <if test="filePath != null">`file_path` = #{filePath}, </if>
     </set>
     where id = #{id}
   </update>

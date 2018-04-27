@@ -14,6 +14,10 @@ public class PactVersionEntity {
 
     private Long pactTemplateId;
 
+    private String platform;
+
+    private String pactName;
+
     public Long getId() {
         return id;
     }
@@ -45,4 +49,22 @@ public class PactVersionEntity {
     public void setPactTemplateId(Long pactTemplateId) {
         this.pactTemplateId = pactTemplateId;
     }
+
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getPactName() {
+        return pactName;
+    }
+
+    public void setPactName(String pactName) {
+        this.pactName = pactName;
+    }
+
 }

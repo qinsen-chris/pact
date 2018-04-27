@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.gclfax.modules.pact.dao.PactVersionDao" >
+
   <resultMap id="BaseResultMap" type="com.gclfax.modules.pact.entity.PactVersionEntity" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="pact_path" property="pactPath" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="pact_template_id" property="pactTemplateId" jdbcType="BIGINT" />
+    <result column="platform" property="platform" jdbcType="VARCHAR" />
+    <result column="name" property="pactName" jdbcType="VARCHAR" />
   </resultMap>
 
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactVersionEntity" useGeneratedKeys="true" keyProperty="id" >
@@ -23,6 +26,45 @@
     select id, pact_path, create_time, pact_template_id
     from t_pact_version
     where id = #{id}
+  </select>
+
+  <select id="queryList" resultType="com.gclfax.modules.pact.entity.PactTemplateEntity">
+    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time
+    FROM t_pact_version a
+    LEFT JOIN t_pact_template b on a.pact_template_id = b.id
+    <where>
+      <if test="platform != null and platform.trim() != ''">
+        and b.`platform` =#{platform}
+      </if>
+      <if test="name != null and name.trim() != ''">
+        and b.`name` like concat('%',#{name},'%')
+      </if>
+    </where>
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time
+    FROM t_pact_version a
+    LEFT JOIN t_pact_template b on a.pact_template_id = b.id
+    <where>
+      <if test="platform != null and platform.trim() != ''">
+        and b.`platform` =#{platform}
+      </if>
+      <if test="name != null and name.trim() != ''">
+        and b.`name` like concat('%',#{name},'%')
+      </if>
+    </where>
   </select>
 
 </mapper>

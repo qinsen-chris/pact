@@ -1,14 +1,13 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'pactTemplate/list',
+        url: baseURL + 'pactVersion/list',
         datatype: "json",
         colModel: [
-            { label: '模板id', name: 'id', index: "id", width: 20, key: true},
+            { label: '版本号', name: 'id', index: "id", width: 10, key: true },
 			{ label: '平台标识', name: 'platform', index: "platform", width: 20 },
-			{ label: '模板名称', name: 'name',index: "name",  width: 75 },
-			{ label: '最新版本号', name: 'version',index: "version", width: 25 },
-			{ label: '文件路径', name: 'filePath',index: "filePath", width: 80 },
-			{ label: '创建时间', name: 'createTime', index: "create_time", width: 50}
+			{ label: '模板名称', name: 'pactName',index: "pactName",  width: 75 },
+			{ label: '模板路径', name: 'pactPath',index: "pactPath",  width: 75 },
+			{ label: '创建时间', name: 'createTime', index: "create_time", width: 80}
         ],
 		viewrecords: true,
         height: 385,
@@ -23,8 +22,7 @@ $(function () {
             root: "page.list",
             page: "page.currPage",
             total: "page.totalPage",
-            records: "page.totalCount",
-            platformEnum:"platformEnum"
+            records: "page.totalCount"
         },
         prmNames : {
             page:"page", 
@@ -43,17 +41,14 @@ var vm = new Vue({
 	data:{
 		q:{
 			platform: null,
-			name: null,
-			version:null,
-			filePath:null
-
+			pactName: null,
+			pactPath: null,
+			createTime: null
 		},
 		showList: true,
 		title:null,
-		pact:{
-		},
-		platformEnum:null,
-		importing:false
+		pactVersion:{
+		}
 
 	},
 	methods: {
@@ -89,7 +84,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "pactTemplate/delete",
+				    url: baseURL + "pactVersion/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(pactIds),
 				    success: function(r){
@@ -109,7 +104,7 @@ var vm = new Vue({
                 return ;
             }
 
-			var url = vm.pact.id == null ? "pactTemplate/save" : "pactTemplate/update" ;
+			var url = vm.pact.id == null ? "pactVersion/save" : "pactVersion/update" ;
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -165,48 +160,6 @@ var vm = new Vue({
                 alert("文档名称不能为空");
                 return true;
             }
-        },
-        onUpload:function(e){
-            if(isBlank(vm.pact.platform)){
-                alert("平台不能为空!");
-                return false;
-            }
-            var fileName = e.target.files[0].name;
-            var sufName = fileName.substring(fileName.lastIndexOf("."));
-            if (!(sufName && /^.docx$/.test(sufName.toLowerCase()))){
-                e.target.value = null;
-                alert('只支持 .docx 格式的word文件！');
-                return;
-            }
-            eTarget = e.target;
-            vm.importing = true;
-            var formData = new FormData();
-            formData.append('file', e.target.files[0]);
-            formData.append('platform',vm.pact.platform);
-            $.ajax({
-                url: baseURL + 'pactTemplate/upload?token=' + token,
-                type: 'POST',
-                dataType: 'json',
-                cache: false,
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(res){
-                    vm.importing = false;
-                    if (res.code == 0) {
-                       //
-
-                    }else{
-                        e.target.value = null;
-                        alert(res.msg);
-                    }
-                },
-                error: function(err) {
-                    e.target.value = null;
-                    vm.importing = false;
-                    alert("网络错误");
-                }
-            });
         }
 	}
 });
