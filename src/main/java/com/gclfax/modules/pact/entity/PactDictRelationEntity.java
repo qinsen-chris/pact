@@ -3,7 +3,7 @@ package com.gclfax.modules.pact.entity;
 public class PactDictRelationEntity {
     private Long id;
 
-    private Long pactVersionId;
+    private Long pactTemplateId;
 
     private Long pactDictId;
 
@@ -20,11 +20,11 @@ public class PactDictRelationEntity {
     }
 
     public Long getPactVersionId() {
-        return pactVersionId;
+        return pactTemplateId;
     }
 
-    public void setPactVersionId(Long pactVersionId) {
-        this.pactVersionId = pactVersionId;
+    public void setPactVersionId(Long pactTemplateId) {
+        this.pactTemplateId = pactTemplateId;
     }
 
     public Long getPactDictId() {

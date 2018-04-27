@@ -3,15 +3,50 @@
 <mapper namespace="com.gclfax.modules.pact.dao.PactDictRelationDao" >
   <resultMap id="BaseResultMap" type="com.gclfax.modules.pact.entity.PactDictRelationEntity" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="pact_version_id" property="pactVersionId" jdbcType="BIGINT" />
+    <result column="pact_template_id" property="pactTemplateId" jdbcType="BIGINT" />
     <result column="pact_dict_id" property="pactDictId" jdbcType="BIGINT" />
     <result column="result_type" property="resultType" jdbcType="VARCHAR" />
     <result column="is_must" property="isMust" jdbcType="BIT" />
   </resultMap>
 
-  <insert id="insert" parameterType="com.gclfax.modules.pact.entity.PactDictRelationEntity" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_pact_dict_relation (pact_version_id, pact_dict_id, result_type, is_must)
-    values (#{pactVersionId,jdbcType=BIGINT}, #{pactDictId,jdbcType=BIGINT}, #{resultType,jdbcType=VARCHAR}, #{isMust,jdbcType=BIT})
+  <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactDictRelationEntity" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_pact_dict_relation (pact_template_id, pact_dict_id, result_type, is_must)
+    values (#{pactTemplateId}, #{pactDictId}, #{resultType}, #{isMust})
   </insert>
 
+  <select id="queryPactDictRelationList" resultType="map">
+    select a.id, a.pact_template_id as pactTemplateId, a.pact_dict_id as pactDictId, a.result_type as resultType, a.is_must as isMust,
+      b.dict_key as dictKey, c.name 
+    from t_pact_dict_relation a JOIN t_pact_dict b ON a.pact_dict_id = b.id JOIN t_pact_template c ON a.pact_template_id = c.id
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    select count(1) from t_pact_dict_relation
+  </select>
+
+  <update id="update" parameterType="com.gclfax.modules.pact.entity.PactDictRelationEntity">
+    update t_pact_dict_relation
+    <set>
+      <if test="pactTemplateId != null">`pact_template_id` = #{pactTemplateId}, </if>
+      <if test="pactDictId != null">`pact_dict_id` = #{pactDictId}, </if>
+      <if test="resultType != null">`result_type` = #{resultType}, </if>
+      <if test="isMust != null">`is_must` = #{isMust}, </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteBatch">
+    delete from t_pact_dict_relation where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>

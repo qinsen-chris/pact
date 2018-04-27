@@ -26,6 +26,9 @@ public class PactDictController {
     @Autowired
     private PactDictService pactDictService;
 
+    /**
+     * 保存模板字典
+     */
     @SysLog("保存模板字典")
     @RequestMapping("/save")
     @RequiresPermissions("pactDict:save")
@@ -35,7 +38,7 @@ public class PactDictController {
     }
 
     /**
-     * 修改用户
+     * 修改模板字典
      */
     @SysLog("修改模板字典")
     @RequestMapping("/update")
@@ -45,6 +48,9 @@ public class PactDictController {
         return R.ok();
     }
 
+    /**
+     * 模板字典列表
+     */
     @SysLog("模板字典列表")
     @RequestMapping("/list")
     @RequiresPermissions("pactDict:list")
