@@ -2,6 +2,7 @@ package com.gclfax.modules.pact.service.impl;
 
 import com.gclfax.common.constants.PactFlagEnum;
 import com.gclfax.common.constants.PlatformEnum;
+import com.gclfax.common.exception.RRException;
 import com.gclfax.common.utils.DateUtils;
 import com.gclfax.common.utils.ReplaceAndToHtmlUtils;
 import com.gclfax.common.validator.Assert;
@@ -19,10 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by chenmy on 2018/4/27.
@@ -52,7 +50,7 @@ public class PactRecordServiceImpl implements PactRecordService {
     @Override
     public void pactRecordService(String platform,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj) {
         if(StringUtils.isEmpty(pactFlag) || !PactFlagEnum.BID.getCode().equals(pactFlag)
-                || !PactFlagEnum.TRANS.getCode().equals(pactFlag)
+                || !PactFlagEnum.O2M_BID.getCode().equals(pactFlag)
                 || !PactFlagEnum.INVEST.getCode().equals(pactFlag)
                 || !PactFlagEnum.O2M_INVEST.getCode().equals(pactFlag) ){
             LOGGER.error("pactFlag标识错误 : "+pactFlag);
@@ -64,16 +62,23 @@ public class PactRecordServiceImpl implements PactRecordService {
             return;
         }
         Assert.isNull(pactFlagId, pactFlag+"ID不能为空");
-        Assert.isNull(pactVersionId, "templateId不能为空");
+        Assert.isNull(pactVersionId, "pactVersionId不能为空");
+
         //获取模板
-        PactVersionEntity pactTemplate = pactVersionService.findById(pactVersionId);
+        PactVersionEntity pactVersionEntity = pactVersionService.findById(pactVersionId);
         //根据Path获取模板文件
-        String filePath = pactTemplate.getPactPath();
+        String filePath = pactVersionEntity.getPactPath();
         Date date = new Date();
         String targerPath = pactPath+platform+"/"+ DateUtils.format(date,DateUtils.YYYYMM_PATTERN)+"/";
         String targetFileName = pactFlag+"_"+pactFlagId+".pdf";
+
         //获取模板参数
-        Map<String, Object> resutlMap = getPactParamMapByTemplateId(pactVersionId,pactFlagId);
+        List params = new ArrayList();
+        params.add(pactFlagId);
+        for (Object param : obj) {
+            params.add(param);
+        }
+        Map<String, Object> resutlMap = getPactParamMapByTemplateId(pactVersionId,params);
 
         //模板占位参数转换
         ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
@@ -89,31 +94,48 @@ public class PactRecordServiceImpl implements PactRecordService {
 
     /**
      * 根据模板Id,获取替换参数
-     * @param templateId
+     * @param pactVersionId
      * @return
      */
-    private Map<String,Object> getPactParamMapByTemplateId(Long templateId,Long id){
+    private Map<String,Object> getPactParamMapByTemplateId(Long pactVersionId,Object ... obj){
         Map<String, Object> resutlMap = new HashMap();
-        List<Map<String, Object>> mapList = pactDictService.queryListByTemplateId(templateId);
+        List<Map<String, Object>> mapList = pactDictService.queryListByTemplateId(pactVersionId);
 
-        String dictKey,dictValue,resultType;
+        String dictKey,dictValue,resultType,errorInfo;
         Boolean isMust;
         for (Map<String, Object> map : mapList) {
             dictKey = (String) map.get("dictKey");
             dictValue = (String) map.get("dictValue");
             resultType = (String) map.get("resultType");
             isMust = (Boolean) map.get("isMust");
-            Object value = jdbcTemplate.queryForObject(dictValue,Object.class,id);
+
+            int i = counter(dictValue,'?');
+            if (obj.length < i){
+                errorInfo = "占位符与参数不匹配："+dictKey+": SQL :"+dictValue+"参数值："+obj.toString();
+                LOGGER.error(errorInfo);
+                throw new RRException(errorInfo);
+            }
+
+            Object value = jdbcTemplate.queryForObject(dictValue,Object.class,obj);
             if (isMust){
-                Assert.isNull(value,dictKey+"，是必须参数，值不能为空！");
+                errorInfo = dictKey+"，是必须参数，值不能为空！";
+                LOGGER.error(errorInfo);
+                Assert.isNull(value,errorInfo);
             }
             resutlMap.put(dictKey,value);
         }
         return resutlMap;
     }
 
-
-
+    private int counter(String s,char c){
+        int count=0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)==c){
+                count++;
+            }
+        }
+        return count;
+    }
 
 
 }

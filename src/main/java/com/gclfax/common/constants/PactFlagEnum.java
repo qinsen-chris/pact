@@ -5,7 +5,7 @@ package com.gclfax.common.constants;
  */
 public enum PactFlagEnum {
     BID("原始协议","bid"),
-    TRANS("转让协议","trans"),
+    O2M_BID("转让协议","o2m_bid"),
     INVEST("投资合同","invest"),
     O2M_INVEST("转让投资合同","o2m_invest");
 
