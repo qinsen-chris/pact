@@ -21,14 +21,5 @@ public class PactRecordController {
     @Autowired
     private PactRecordService pactRecordService;
 
-    /**
-     * 协议生成
-     */
-    @SysLog("协议生成")
-    @RequestMapping("/generate")
-    public R generate(@RequestBody Map<String,Object> paramMap){
-        pactRecordService.pactRecordService(paramMap);
-        return R.ok();
-    }
 
 }
