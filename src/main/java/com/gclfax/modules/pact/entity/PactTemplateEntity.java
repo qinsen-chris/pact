@@ -9,26 +9,6 @@ public class PactTemplateEntity {
 
     private Date createTime;
 
-    private int version;
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    private String filePath;
-
     private String platform;
 
     public Long getId() {

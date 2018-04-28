@@ -4,16 +4,16 @@
 
   <resultMap id="BaseResultMap" type="com.gclfax.modules.pact.entity.PactVersionEntity" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="pact_name" property="pactName" jdbcType="VARCHAR" />
     <result column="pact_path" property="pactPath" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="pact_template_id" property="pactTemplateId" jdbcType="BIGINT" />
-    <result column="platform" property="platform" jdbcType="VARCHAR" />
-    <result column="name" property="pactName" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
   </resultMap>
 
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactVersionEntity" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_pact_version (pact_path, create_time, pact_template_id )
-    values (#{pactPath}, #{createTime}, #{pactTemplateId})
+    insert into t_pact_version (pact_name, create_time, pact_template_id ,pact_path,version)
+    values (#{pactName}, #{createTime}, #{pactTemplateId},#{pactPath},#{version})
   </insert>
 
   <select id="queryObject" resultType="com.gclfax.modules.pact.entity.PactVersionEntity">
@@ -28,8 +28,14 @@
     where id = #{id}
   </select>
 
-  <select id="queryList" resultType="com.gclfax.modules.pact.entity.PactTemplateEntity">
-    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time
+  <select id="selectMaxVersionByParam" resultType="int">
+    SELECT IFNULL(MAX(version),0) from t_pact_version
+    where pact_template_id = #{pactTemplateId}
+  </select>
+
+
+  <select id="queryList" resultType="com.gclfax.modules.pact.entity.PactVersionEntity">
+    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time,a.version
     FROM t_pact_version a
     LEFT JOIN t_pact_template b on a.pact_template_id = b.id
     <where>
@@ -54,7 +60,7 @@
   </select>
 
   <select id="queryTotal" resultType="int">
-    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time
+    SELECT count(*)
     FROM t_pact_version a
     LEFT JOIN t_pact_template b on a.pact_template_id = b.id
     <where>

@@ -10,4 +10,6 @@ import java.util.Map;
 public interface PactVersionDao extends BaseDao<PactVersionEntity>{
 
     Map getMapById(Long id);
+
+    int selectMaxVersionByParam(Map<String, Object> map);
 }

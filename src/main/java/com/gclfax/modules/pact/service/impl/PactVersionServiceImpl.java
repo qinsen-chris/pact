@@ -24,6 +24,11 @@ public class PactVersionServiceImpl implements PactVersionService {
     }
 
     @Override
+    public int update(PactVersionEntity pactVersionEntity) {
+        return pactVersionDao.update(pactVersionEntity);
+    }
+
+    @Override
     public PactVersionEntity findById(Long id) {
         return pactVersionDao.queryObject(id);
     }
@@ -52,5 +57,10 @@ public class PactVersionServiceImpl implements PactVersionService {
     @Override
     public int queryTotal(Map<String, Object> map) {
         return pactVersionDao.queryTotal(map);
+    }
+
+    @Override
+    public int selectMaxVersionByParam(Map<String, Object> map) {
+        return pactVersionDao.selectMaxVersionByParam(map);
     }
 }

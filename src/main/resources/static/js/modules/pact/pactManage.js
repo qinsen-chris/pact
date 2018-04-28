@@ -3,19 +3,17 @@ $(function () {
         url: baseURL + 'pactTemplate/list',
         datatype: "json",
         colModel: [
-            { label: '模板id', name: 'id', index: "id", width: 20, key: true},
-			{ label: '平台标识', name: 'platform', index: "platform", width: 20 },
-			{ label: '模板名称', name: 'name',index: "name",  width: 75 },
-			{ label: '最新版本号', name: 'version',index: "version", width: 25 },
-			{ label: '文件路径', name: 'filePath',index: "filePath", width: 80 },
-			{ label: '创建时间', name: 'createTime', index: "create_time", width: 50}
+            { label: '版本号', name: 'id', index: "id", width: 10, key: true ,hidden:true},
+			{ label: '平台标识', name: 'platform', index: "platform", width: 30 },
+			{ label: '模板名称', name: 'name',index: "name",  width: 95 },
+			{ label: '创建时间', name: 'createTime', index: "create_time", width: 60}
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
-        rownumbers: true, 
-        rownumWidth: 25, 
+        rownumbers: true,
+        rownumWidth: 25,
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -23,17 +21,16 @@ $(function () {
             root: "page.list",
             page: "page.currPage",
             total: "page.totalPage",
-            records: "page.totalCount",
-            platformEnum:"platformEnum"
+            records: "page.totalCount"
         },
         prmNames : {
-            page:"page", 
-            rows:"limit", 
+            page:"page",
+            rows:"limit",
             order: "order"
         },
         gridComplete:function(){
         	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
         }
     });
 });
@@ -43,17 +40,12 @@ var vm = new Vue({
 	data:{
 		q:{
 			platform: null,
-			name: null,
-			version:null,
-			filePath:null
-
+			name: null
 		},
 		showList: true,
 		title:null,
 		pact:{
-		},
-		platformEnum:null,
-		importing:false
+		}
 
 	},
 	methods: {
@@ -85,7 +77,7 @@ var vm = new Vue({
 			if(pactIds == null){
 				return ;
 			}
-			
+
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
@@ -150,7 +142,7 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			var platformEnum = $("#jqGrid").jqGrid('getGridParam','platformEnum');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
                 postData:{'platform': vm.q.platform,'name':vm.q.name},
                 page:page
             }).trigger("reloadGrid");
@@ -165,48 +157,6 @@ var vm = new Vue({
                 alert("文档名称不能为空");
                 return true;
             }
-        },
-        onUpload:function(e){
-            if(isBlank(vm.pact.platform)){
-                alert("平台不能为空!");
-                return false;
-            }
-            var fileName = e.target.files[0].name;
-            var sufName = fileName.substring(fileName.lastIndexOf("."));
-            if (!(sufName && /^.docx$/.test(sufName.toLowerCase()))){
-                e.target.value = null;
-                alert('只支持 .docx 格式的word文件！');
-                return;
-            }
-            eTarget = e.target;
-            vm.importing = true;
-            var formData = new FormData();
-            formData.append('file', e.target.files[0]);
-            formData.append('platform',vm.pact.platform);
-            $.ajax({
-                url: baseURL + 'pactTemplate/upload?token=' + token,
-                type: 'POST',
-                dataType: 'json',
-                cache: false,
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(res){
-                    vm.importing = false;
-                    if (res.code == 0) {
-                       //
-
-                    }else{
-                        e.target.value = null;
-                        alert(res.msg);
-                    }
-                },
-                error: function(err) {
-                    e.target.value = null;
-                    vm.importing = false;
-                    alert("网络错误");
-                }
-            });
         }
 	}
 });

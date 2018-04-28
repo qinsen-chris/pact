@@ -12,6 +12,8 @@ public interface PactVersionService {
 
     void save(PactVersionEntity pactVersionEntity);
 
+    int update(PactVersionEntity pactVersionEntity);
+
     PactVersionEntity findById(Long id);
 
     Map getMapById(Long id);
@@ -27,4 +29,6 @@ public interface PactVersionService {
      * 查询总数
      */
     int queryTotal(Map<String, Object> map);
+
+    int selectMaxVersionByParam(Map<String, Object> map);
 }
