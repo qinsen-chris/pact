@@ -18,6 +18,7 @@ public class PactDictServiceImpl implements PactDictService {
     @Autowired
     private PactDictDao pactDictDao;
 
+
     @Override
     public void save(PactDictEntity pactDictEntity) {
         pactDictDao.save(pactDictEntity);
@@ -42,4 +43,11 @@ public class PactDictServiceImpl implements PactDictService {
     public List<PactDictEntity> queryList(Map<String, Object> map) {
         return pactDictDao.queryList(map);
     }
+
+    @Override
+    public List<Map<String, Object>> queryListByTemplateId(Long id) {
+        return pactDictDao.queryListByTemplateId(id);
+    }
+
+
 }

@@ -29,6 +29,12 @@
     </if>
   </select>
 
+  <select id="queryListByTemplateId" resultType="map">
+    select a.dict_key as dictKey, a.dict_value as dictValue, b.result_type as resultType, b.is_must as isMust
+    from t_pact_dict a JOIN t_pact_dict_relation b ON a.id = b.pact_dict_id
+    where b.pact_template_id = #{id}
+  </select>
+
   <select id="queryTotal" resultType="int">
     select count(1) from t_pact_dict
     <where>

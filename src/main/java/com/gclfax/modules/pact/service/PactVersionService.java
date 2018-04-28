@@ -31,4 +31,6 @@ public interface PactVersionService {
     int queryTotal(Map<String, Object> map);
 
     int selectMaxVersionByParam(Map<String, Object> map);
+
+    PactVersionEntity findByTemplateId(Long templateId);
 }

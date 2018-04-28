@@ -12,4 +12,6 @@ public interface PactVersionDao extends BaseDao<PactVersionEntity>{
     Map getMapById(Long id);
 
     int selectMaxVersionByParam(Map<String, Object> map);
+
+    PactVersionEntity findByTemplateId(Long templateId);
 }

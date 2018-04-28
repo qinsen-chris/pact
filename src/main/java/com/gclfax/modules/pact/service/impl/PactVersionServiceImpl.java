@@ -34,6 +34,11 @@ public class PactVersionServiceImpl implements PactVersionService {
     }
 
     @Override
+    public PactVersionEntity findByTemplateId(Long templateId) {
+        return pactVersionDao.findByTemplateId(templateId);
+    }
+
+    @Override
     public Map getMapById(Long id) {
         return pactVersionDao.getMapById(id);
     }

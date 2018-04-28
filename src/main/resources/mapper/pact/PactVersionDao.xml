@@ -22,6 +22,14 @@
     where id = #{id}
   </select>
 
+  <select id="findByTemplateId" resultType="com.gclfax.modules.pact.entity.PactVersionEntity">
+    select id, pact_path, create_time, pact_template_id
+    from t_pact_version
+    where pact_template_id = #{id}
+    order by version desc
+    limit 1 , 1
+  </select>
+
   <select id="getMapById" resultType="map">
     select id, pact_path, create_time, pact_template_id
     from t_pact_version
@@ -60,7 +68,7 @@
   </select>
 
   <select id="queryTotal" resultType="int">
-    SELECT count(*)
+    SELECT count(1)
     FROM t_pact_version a
     LEFT JOIN t_pact_template b on a.pact_template_id = b.id
     <where>
