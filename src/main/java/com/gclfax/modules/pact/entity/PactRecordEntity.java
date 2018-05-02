@@ -7,13 +7,13 @@ public class PactRecordEntity {
 
     private String platform;
 
-    private String fileSign;
+    private Long pactFlagId;
+
+    private String pactFlag;
 
     private String pactPath;
 
     private Date createTime;
-
-    private Integer version;
 
     public Long getId() {
         return id;
@@ -29,14 +29,6 @@ public class PactRecordEntity {
 
     public void setPlatform(String platform) {
         this.platform = platform == null ? null : platform.trim();
-    }
-
-    public String getFileSign() {
-        return fileSign;
-    }
-
-    public void setFileSign(String fileSign) {
-        this.fileSign = fileSign == null ? null : fileSign.trim();
     }
 
     public String getPactPath() {
@@ -55,11 +47,19 @@ public class PactRecordEntity {
         this.createTime = createTime;
     }
 
-    public Integer getVersion() {
-        return version;
+    public Long getPactFlagId() {
+        return pactFlagId;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setPactFlagId(Long pactFlagId) {
+        this.pactFlagId = pactFlagId;
+    }
+
+    public String getPactFlag() {
+        return pactFlag;
+    }
+
+    public void setPactFlag(String pactFlag) {
+        this.pactFlag = pactFlag;
     }
 }

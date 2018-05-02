@@ -11,12 +11,12 @@
   </resultMap>
 
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactRecordEntity" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_pact_record (platform, file_sign, pact_path,create_time)
-    values (#{platform}, #{fileSign}, #{pactPath},#{createTime})
+    insert into t_pact_record (platform, pact_flag, pact_flag_id,pact_path,create_time)
+    values (#{platform}, #{pactFlag},#{pactFlagId}, #{pactPath},#{createTime})
   </insert>
   <select id="queryPactPath" resultType="map">
     select pact_path as pactPath
     from t_pact_record
-    where platform = #{platform} and file_sign = #{fileSign}
+    where platform = #{platform} and pact_flag = #{pactFlag} and pact_flag_id = #{pactFlagId}
   </select>
 </mapper>

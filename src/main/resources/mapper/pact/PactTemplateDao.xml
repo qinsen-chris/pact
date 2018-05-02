@@ -70,7 +70,7 @@
   </select>
 
   <select id="queryPactTemplate" resultType="map">
-    select a.name, a.create_time, a.platform,b.id as pactversionid,max(b.version) as version
+    select a.name, a.create_time as createTime, a.platform, b.id as pactVersionId, max(b.version) as version
     from t_pact_template a left join t_pact_version b on a.id = b.pact_template_id
     <where>
       <if test="platform != null and platform.trim() != ''">

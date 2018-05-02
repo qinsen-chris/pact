@@ -89,7 +89,8 @@ public class PactRecordServiceImpl implements PactRecordService {
         //生成保存协议
         PactRecordEntity record = new PactRecordEntity();
         record.setPactPath(targerPath+targetFileName);
-        record.setFileSign(pactFlag+"_"+pactFlagId);
+        record.setPactFlag(pactFlag);
+        record.setPactFlagId(pactFlagId);
         record.setPlatform(platform);
         record.setCreateTime(date);
         save(record);
@@ -142,6 +143,6 @@ public class PactRecordServiceImpl implements PactRecordService {
 
     @Override
     public Map<String, Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId) {
-        return pactRecordDao.queryPactPath(platfrom,pactFlag+"_"+pactFlagId);
+        return pactRecordDao.queryPactPath(platfrom,pactFlag,pactFlagId);
     }
 }

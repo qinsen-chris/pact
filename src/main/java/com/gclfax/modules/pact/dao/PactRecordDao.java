@@ -10,5 +10,5 @@ import java.util.Map;
 @Mapper
 public interface PactRecordDao extends BaseDao<PactRecordEntity>{
 
-    Map<String,Object> queryPactPath(@Param("platform")String platform, @Param("fileSign")String fileSign);
+    Map<String,Object> queryPactPath(@Param("platform") String platform, @Param("pactFlag") String pactFlag,@Param("pactFlagId") Long pactFlagId);
 }
