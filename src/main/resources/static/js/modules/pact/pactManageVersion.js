@@ -90,7 +90,12 @@ var vm = new Vue({
 		},
 		showList: true,
 		title:null,
-		pact:{},
+		pact:{
+			pactTemplateId:null,
+			platform:null,
+			pactName:null
+			
+		},
 		platformEnum:null,
 		importing:false,
 		importResult:false,
@@ -269,10 +274,9 @@ var vm = new Vue({
                     console.log(rowData);
                     vm.$set(vm.pact,"platform",rowData.platform);
                     vm.$set(vm.pact,"pactName",rowData.name);
+                  //实际保存ID
                     vm.$set(vm.pact,"pactTemplateId",ids);
-                    console.log(this.pact);
-                    //实际保存ID
-                    vm.pact.pactTemplateId = ids;
+                    
                     
                     layer.close(index);
                 }.bind(this)
