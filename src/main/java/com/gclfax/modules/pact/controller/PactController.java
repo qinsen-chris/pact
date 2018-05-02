@@ -55,15 +55,16 @@ public class PactController {
     }
 
     /**
-     * 查文件路径
-     * @param platfrom
-     * @param pactFlag
-     * @param pactFlagId
+     * 生成合同
+     * @param requestVo
      * @return
      */
     @RequestMapping(value = "/pactGenerate",method = RequestMethod.POST)
-    public R pactGenerate(String platfrom,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId){
-        Map<String,Object> map = pactRecordService.pactRecordService(platfrom,fileDate,pactFlag,pactFlagId,pactVersionId);
+    public @ResponseBody R pactGenerate(@RequestBody PactRequestVo requestVo){
+        Map<String,Object> map = pactRecordService.pactRecordService(requestVo.getPlatform(),requestVo.getFileDate(),requestVo.getPactFlag(),requestVo.getBusinessId(),requestVo.getPactVersionId());
+        if(!(boolean)map.get("result")){
+            return R.error((String) map.get("msg"));
+        }
         return R.ok().put("data",map);
     }
 

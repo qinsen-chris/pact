@@ -54,12 +54,14 @@ public class PactRecordServiceImpl implements PactRecordService {
                 || PactFlagEnum.INVEST.getCode().equals(pactFlag)
                 || PactFlagEnum.O2M_INVEST.getCode().equals(pactFlag) )){
             LOGGER.error("pactFlag标识错误 : "+pactFlag);
+            resultMap.put("result",false);
             resultMap.put("msg","pactFlag标识错误,只能是bid、o2m_bid、invest、o2m_invest中的一种！");
             return resultMap;
         }
         if(StringUtils.isEmpty(platform) || !(PlatformEnum.GXS_CG.getCode().equals(platform)
                 || PlatformEnum.GXS_HF.getCode().equals(platform)) ){
             LOGGER.error("platform标识错误 : "+platform);
+            resultMap.put("result",false);
             resultMap.put("msg","platform标识错误！");
             return resultMap;
         }
@@ -87,6 +89,7 @@ public class PactRecordServiceImpl implements PactRecordService {
             ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
         } catch (Exception e) {
             LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
+            resultMap.put("result",false);
             resultMap.put("msg","生成合同异常！");
             return resultMap;
         }
@@ -99,6 +102,7 @@ public class PactRecordServiceImpl implements PactRecordService {
         record.setPlatform(platform);
         record.setCreateTime(date);
         save(record);
+        resultMap.put("result",true);
         resultMap.put("msg","success");
         resultMap.put("pactPath",record.getPactPath());
         return resultMap;
