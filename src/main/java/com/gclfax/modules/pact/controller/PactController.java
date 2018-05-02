@@ -1,7 +1,5 @@
 package com.gclfax.modules.pact.controller;
 
-import com.gclfax.common.utils.PageUtils;
-import com.gclfax.common.utils.Query;
 import com.gclfax.common.utils.R;
 import com.gclfax.modules.pact.service.PactRecordService;
 import com.gclfax.modules.pact.service.PactTemplateService;
@@ -9,6 +7,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,16 +31,12 @@ public class PactController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/pactTemp",method = RequestMethod.POST)
-    public R pactTemp(Map<String,Object> params){
+    @RequestMapping(value = "/pactTemp",method = RequestMethod.GET)
+    public R pactTemp(@RequestParam String platform){
         Map<String,Object> paramMap = new HashedMap();
-        paramMap.put("page",1);
-        paramMap.put("limit",5);
-        Query q = new Query(paramMap);
-        List<Map<String,Object>> tempList = pactTemplateService.queryPactTemplate(q);
-        int totalTemp = pactTemplateService.queryTotal(q);
-        PageUtils page = new PageUtils(tempList, totalTemp, q.getLimit(),q.getPage());
-        return R.ok().put("page",page);
+        paramMap.put("platform",platform);
+        List<Map<String,Object>> tempList = pactTemplateService.queryPactTemplate(paramMap);
+        return R.ok().put("data",tempList);
     }
 
     /**
@@ -54,7 +49,7 @@ public class PactController {
     @RequestMapping(value = "/pactPath",method = RequestMethod.POST)
     public R pactPath(String platfrom,String pactFlag,Long pactFlagId){
         Map<String,Object> map = pactRecordService.queryPactPath(platfrom,pactFlag,pactFlagId);
-        return R.ok().put("pactPath",map.get("pactPath"));
+        return R.ok().put("data",map);
     }
 
     /**
@@ -67,7 +62,7 @@ public class PactController {
     @RequestMapping(value = "/pactGenerate",method = RequestMethod.POST)
     public R pactGenerate(String platfrom,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId){
         pactRecordService.pactRecordService(platfrom,fileDate,pactFlag,pactFlagId,pactVersionId);
-        return R.ok().put("pactPath","");
+        return R.ok().put("data","");
     }
 
 }
