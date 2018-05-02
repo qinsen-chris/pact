@@ -26,7 +26,7 @@ public class PactController {
     private PactRecordService pactRecordService;
 
     /**
-     * 查询模板
+     * 查询模板列表
      * @param
      * @return
      */
@@ -78,6 +78,22 @@ public class PactController {
         Map<String,Object> map = pactRecordService.pactGenerateO2M(requestVo.getPlatform(),requestVo.getFileDate(),requestVo.getPactFlag(),requestVo.getBusinessId(),requestVo.getPactVersionId(),requestVo.getO2mUserId());
         if(!(boolean)map.get("result")){
             return R.error((String) map.get("msg"));
+        }
+        return R.ok().put("data",map);
+    }
+
+    /**
+     * 查询转让标合同是否生成
+     * @param requestVo
+     * @return isExist、pactPath
+     */
+    @RequestMapping(value = "/pactPathO2M",method = RequestMethod.POST)
+    public  @ResponseBody R pactPathO2M(@RequestBody PactRequestVo requestVo){
+        Map<String,Object> map = pactRecordService.queryPactO2MPath(requestVo.getPlatform(),requestVo.getPactFlag(),requestVo.getBusinessId(),requestVo.getO2mUserId());
+        if(StringUtils.isEmpty(map.get("pactPath"))){
+            map.put("isExist",0);
+        }else{
+            map.put("isExist",1);
         }
         return R.ok().put("data",map);
     }

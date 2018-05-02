@@ -40,4 +40,13 @@ public interface PactRecordService {
      * @param pactVersionId
      */
     Map<String,Object> pactGenerateO2M(String platform, String fileDate, String pactFlag, Long pactFlagId, Long pactVersionId, Long o2mUserId);
+
+    /**
+     * 查询“转让标”文件路径
+     * @param platfrom
+     * @param pactFlag
+     * @param pactFlagId
+     * @return
+     */
+    Map<String,Object> queryPactO2MPath(String platfrom, String pactFlag, Long pactFlagId,Long o2mUserId);
 }
