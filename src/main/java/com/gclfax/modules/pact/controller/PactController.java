@@ -63,8 +63,8 @@ public class PactController {
      */
     @RequestMapping(value = "/pactGenerate",method = RequestMethod.POST)
     public R pactGenerate(String platfrom,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId){
-        pactRecordService.pactRecordService(platfrom,fileDate,pactFlag,pactFlagId,pactVersionId);
-        return R.ok().put("data","");
+        Map<String,Object> map = pactRecordService.pactRecordService(platfrom,fileDate,pactFlag,pactFlagId,pactVersionId);
+        return R.ok().put("data",map);
     }
 
 }

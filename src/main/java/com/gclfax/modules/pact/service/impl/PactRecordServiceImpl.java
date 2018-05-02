@@ -47,18 +47,21 @@ public class PactRecordServiceImpl implements PactRecordService {
 
 
     @Override
-    public void pactRecordService(String platform,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj) {
+    public Map<String,Object> pactRecordService(String platform,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj) {
+        Map<String,Object> resultMap = new HashMap<String,Object>();
         if(StringUtils.isEmpty(pactFlag) || !(PactFlagEnum.BID.getCode().equals(pactFlag)
                 || PactFlagEnum.O2M_BID.getCode().equals(pactFlag)
                 || PactFlagEnum.INVEST.getCode().equals(pactFlag)
                 || PactFlagEnum.O2M_INVEST.getCode().equals(pactFlag) )){
             LOGGER.error("pactFlag标识错误 : "+pactFlag);
-            return;
+            resultMap.put("msg","pactFlag标识错误,只能是bid、o2m_bid、invest、o2m_invest中的一种！");
+            return resultMap;
         }
         if(StringUtils.isEmpty(platform) || !(PlatformEnum.GXS_CG.getCode().equals(platform)
                 || PlatformEnum.GXS_HF.getCode().equals(platform)) ){
             LOGGER.error("platform标识错误 : "+platform);
-            return;
+            resultMap.put("msg","platform标识错误！");
+            return resultMap;
         }
         Assert.isNull(pactFlagId, pactFlag+"ID不能为空");
         Assert.isNull(pactVersionId, "pactVersionId不能为空");
@@ -84,6 +87,8 @@ public class PactRecordServiceImpl implements PactRecordService {
             ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
         } catch (Exception e) {
             LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
+            resultMap.put("msg","生成合同异常！");
+            return resultMap;
         }
 
         //生成保存协议
@@ -94,6 +99,9 @@ public class PactRecordServiceImpl implements PactRecordService {
         record.setPlatform(platform);
         record.setCreateTime(date);
         save(record);
+        resultMap.put("msg","success");
+        resultMap.put("pactPath",record.getPactPath());
+        return resultMap;
     }
 
     /**

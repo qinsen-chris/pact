@@ -20,7 +20,7 @@ public interface PactRecordService {
      * @param pactFlagId
      * @param pactVersionId
      */
-    void pactRecordService(String platform,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj);
+    Map<String,Object> pactRecordService(String platform,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj);
 
     /**
      * 查询文件路径
