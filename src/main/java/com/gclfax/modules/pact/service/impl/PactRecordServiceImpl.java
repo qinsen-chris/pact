@@ -82,11 +82,11 @@ public class PactRecordServiceImpl implements PactRecordService {
         for (Object param : obj) {
             params.add(param);
         }
-        Map<String, Object> resutlMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
 
-        //模板占位参数转换
         try {
-            ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
+            //模板占位参数转换
+            Map<String, Object> paramMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
+            ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,paramMap);
         } catch (Exception e) {
             LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
             resultMap.put("result",false);
@@ -126,17 +126,22 @@ public class PactRecordServiceImpl implements PactRecordService {
             isMust = (Boolean) map.get("isMust");
 
             int i = counter(dictValue,'?');
+            Object[] obj = new Object[i];
             if (params.size() < i){
                 errorInfo = "占位符与参数不匹配："+dictKey+": SQL :"+dictValue+"参数值："+params.toString();
                 LOGGER.error(errorInfo);
                 throw new RRException(errorInfo);
+            }else{
+                for (int j = 0; j < i ; j++) {
+                    obj[j] = params.get(j);
+                }
             }
 
-            String value = jdbcTemplate.queryForObject(dictValue,String.class,params.toArray());
-            if (isMust){
+            Object value = jdbcTemplate.queryForObject(dictValue,Object.class,obj);
+            if (isMust && value == null){
                 errorInfo = dictKey+"，是必须参数，值不能为空！";
                 LOGGER.error(errorInfo);
-                Assert.isNull(value,errorInfo);
+                throw new RRException(errorInfo);
             }
             resutlMap.put(dictKey,value);
         }
