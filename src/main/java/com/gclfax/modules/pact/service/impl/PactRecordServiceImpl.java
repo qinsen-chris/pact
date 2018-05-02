@@ -159,6 +159,64 @@ public class PactRecordServiceImpl implements PactRecordService {
     }
 
     @Override
+    public Map<String, Object> pactGenerateO2M(String platform, String fileDate, String pactFlag, Long pactFlagId, Long pactVersionId, Long o2mUserId) {
+        Map<String,Object> resultMap = new HashMap<String,Object>();
+        if(StringUtils.isEmpty(pactFlag) || !(PactFlagEnum.O2M_BID.getCode().equals(pactFlag))){
+            LOGGER.error("pactFlag标识错误 : "+pactFlag);
+            resultMap.put("result",false);
+            resultMap.put("msg","pactFlag标识错误,只能是o2m_bid！");
+            return resultMap;
+        }
+        if(StringUtils.isEmpty(platform) || !(PlatformEnum.GXS_CG.getCode().equals(platform)
+                || PlatformEnum.GXS_HF.getCode().equals(platform)) ){
+            LOGGER.error("platform标识错误 : "+platform);
+            resultMap.put("result",false);
+            resultMap.put("msg","platform标识错误！");
+            return resultMap;
+        }
+        Assert.isNull(pactFlagId, pactFlag+"ID不能为空");
+        Assert.isNull(pactVersionId, "pactVersionId不能为空");
+
+        //获取模板
+        PactVersionEntity pactVersionEntity = pactVersionService.findById(pactVersionId);
+        //根据Path获取模板文件
+        String filePath = pactVersionEntity.getPactPath();
+        Date date = new Date();
+        String targerPath = pactPath+platform+"/"+ fileDate+"/";
+        String targetFileName = pactFlag+"_"+pactFlagId+"_"+o2mUserId+".pdf";
+
+        //获取模板参数
+        List params = new ArrayList();
+        params.add(pactFlagId);
+        params.add(o2mUserId);
+
+        try {
+            //模板占位参数转换
+            Map<String, Object> paramMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
+            ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,paramMap);
+        } catch (Exception e) {
+            LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
+            resultMap.put("result",false);
+            resultMap.put("msg","生成合同异常！");
+            return resultMap;
+        }
+
+        //生成保存协议
+        PactRecordEntity record = new PactRecordEntity();
+        record.setPactPath(targerPath+targetFileName);
+        record.setPactFlag(pactFlag);
+        record.setPactFlagId(pactFlagId);
+        record.setPlatform(platform);
+        record.setO2mUserId(o2mUserId);
+        record.setCreateTime(date);
+        save(record);
+        resultMap.put("result",true);
+        resultMap.put("msg","success");
+        resultMap.put("pactPath",record.getPactPath());
+        return resultMap;
+    }
+
+    @Override
     public Map<String, Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId) {
         return pactRecordDao.queryPactPath(platfrom,pactFlag,pactFlagId);
     }

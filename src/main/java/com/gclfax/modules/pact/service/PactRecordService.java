@@ -30,4 +30,14 @@ public interface PactRecordService {
      * @return
      */
     Map<String,Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId);
+
+    /**
+     * 转让标协议生成
+     * @param platform
+     * @param fileDate
+     * @param pactFlag
+     * @param pactFlagId
+     * @param pactVersionId
+     */
+    Map<String,Object> pactGenerateO2M(String platform, String fileDate, String pactFlag, Long pactFlagId, Long pactVersionId, Long o2mUserId);
 }

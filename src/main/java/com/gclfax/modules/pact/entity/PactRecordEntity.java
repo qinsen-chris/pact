@@ -9,6 +9,8 @@ public class PactRecordEntity {
 
     private Long pactFlagId;
 
+    private Long o2mUserId;
+
     private String pactFlag;
 
     private String pactPath;
@@ -61,5 +63,13 @@ public class PactRecordEntity {
 
     public void setPactFlag(String pactFlag) {
         this.pactFlag = pactFlag;
+    }
+
+    public Long getO2mUserId() {
+        return o2mUserId;
+    }
+
+    public void setO2mUserId(Long o2mUserId) {
+        this.o2mUserId = o2mUserId;
     }
 }

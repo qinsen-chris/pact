@@ -68,4 +68,18 @@ public class PactController {
         return R.ok().put("data",map);
     }
 
+    /**
+     * 生成转让标合同
+     * @param requestVo
+     * @return
+     */
+    @RequestMapping(value = "/pactGenerateO2M",method = RequestMethod.POST)
+    public @ResponseBody R pactGenerateO2M(@RequestBody PactRequestVo requestVo){
+        Map<String,Object> map = pactRecordService.pactGenerateO2M(requestVo.getPlatform(),requestVo.getFileDate(),requestVo.getPactFlag(),requestVo.getBusinessId(),requestVo.getPactVersionId(),requestVo.getO2mUserId());
+        if(!(boolean)map.get("result")){
+            return R.error((String) map.get("msg"));
+        }
+        return R.ok().put("data",map);
+    }
+
 }
