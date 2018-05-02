@@ -3,12 +3,11 @@ package com.gclfax.modules.pact.controller;
 import com.gclfax.common.utils.R;
 import com.gclfax.modules.pact.service.PactRecordService;
 import com.gclfax.modules.pact.service.PactTemplateService;
+import com.gclfax.modules.pact.vo.PactRequestVo;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -41,14 +40,17 @@ public class PactController {
 
     /**
      * 查文件路径
-     * @param platfrom
-     * @param pactFlag
-     * @param pactFlagId
+     * @param requestVo
      * @return
      */
     @RequestMapping(value = "/pactPath",method = RequestMethod.POST)
-    public R pactPath(String platfrom,String pactFlag,Long pactFlagId){
-        Map<String,Object> map = pactRecordService.queryPactPath(platfrom,pactFlag,pactFlagId);
+    public  @ResponseBody R pactPath(@RequestBody PactRequestVo requestVo){
+        Map<String,Object> map = pactRecordService.queryPactPath(requestVo.getPlatform(),requestVo.getPactFlag(),requestVo.getBusinessId());
+        if(StringUtils.isEmpty(map.get("pactPath"))){
+            map.put("isExist",0);
+        }else{
+            map.put("isExist",1);
+        }
         return R.ok().put("data",map);
     }
 
