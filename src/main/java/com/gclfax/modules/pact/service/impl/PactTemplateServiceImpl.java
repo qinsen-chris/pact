@@ -48,5 +48,13 @@ public class PactTemplateServiceImpl implements PactTemplateService {
         return pactTemplateDao.deleteBatch(pactIds);
     }
 
+    @Override
+    public List<Map<String, Object>> queryPactTemplate(Map<String, Object> map) {
+        return pactTemplateDao.queryPactTemplate(map);
+    }
 
+    @Override
+    public int queryTotalTemp(Map<String, Object> map) {
+        return pactTemplateDao.queryTotalTemp(map);
+    }
 }

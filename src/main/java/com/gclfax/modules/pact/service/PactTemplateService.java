@@ -48,4 +48,8 @@ public interface PactTemplateService {
      * @return
      */
     int deleteBatch(Long[] pactIds);
+
+    List<Map<String,Object>> queryPactTemplate(Map<String, Object> map);
+
+    int queryTotalTemp(Map<String, Object> map);
 }

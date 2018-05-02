@@ -3,7 +3,6 @@ package com.gclfax.modules.pact.service.impl;
 import com.gclfax.common.constants.PactFlagEnum;
 import com.gclfax.common.constants.PlatformEnum;
 import com.gclfax.common.exception.RRException;
-import com.gclfax.common.utils.DateUtils;
 import com.gclfax.common.utils.ReplaceAndToHtmlUtils;
 import com.gclfax.common.validator.Assert;
 import com.gclfax.modules.pact.dao.PactRecordDao;
@@ -48,16 +47,16 @@ public class PactRecordServiceImpl implements PactRecordService {
 
 
     @Override
-    public void pactRecordService(String platform,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj) {
-        if(StringUtils.isEmpty(pactFlag) || !PactFlagEnum.BID.getCode().equals(pactFlag)
-                || !PactFlagEnum.O2M_BID.getCode().equals(pactFlag)
-                || !PactFlagEnum.INVEST.getCode().equals(pactFlag)
-                || !PactFlagEnum.O2M_INVEST.getCode().equals(pactFlag) ){
+    public void pactRecordService(String platform,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj) {
+        if(StringUtils.isEmpty(pactFlag) || !(PactFlagEnum.BID.getCode().equals(pactFlag)
+                || PactFlagEnum.O2M_BID.getCode().equals(pactFlag)
+                || PactFlagEnum.INVEST.getCode().equals(pactFlag)
+                || PactFlagEnum.O2M_INVEST.getCode().equals(pactFlag) )){
             LOGGER.error("pactFlag标识错误 : "+pactFlag);
             return;
         }
-        if(StringUtils.isEmpty(platform) || !PlatformEnum.GXS_CG.getCode().equals(platform)
-                || !PlatformEnum.GXS_HF.getCode().equals(platform) ){
+        if(StringUtils.isEmpty(platform) || !(PlatformEnum.GXS_CG.getCode().equals(platform)
+                || PlatformEnum.GXS_HF.getCode().equals(platform)) ){
             LOGGER.error("platform标识错误 : "+platform);
             return;
         }
@@ -69,7 +68,7 @@ public class PactRecordServiceImpl implements PactRecordService {
         //根据Path获取模板文件
         String filePath = pactVersionEntity.getPactPath();
         Date date = new Date();
-        String targerPath = pactPath+platform+"/"+ DateUtils.format(date,DateUtils.YYYYMM_PATTERN)+"/";
+        String targerPath = pactPath+platform+"/"+ fileDate+"/";
         String targetFileName = pactFlag+"_"+pactFlagId+".pdf";
 
         //获取模板参数
@@ -78,7 +77,7 @@ public class PactRecordServiceImpl implements PactRecordService {
         for (Object param : obj) {
             params.add(param);
         }
-        Map<String, Object> resutlMap = getPactParamMapByTemplateId(pactVersionId,params);
+        Map<String, Object> resutlMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
 
         //模板占位参数转换
         ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
@@ -86,7 +85,7 @@ public class PactRecordServiceImpl implements PactRecordService {
         //生成保存协议
         PactRecordEntity record = new PactRecordEntity();
         record.setPactPath(targerPath+targetFileName);
-        record.setFileSign(targetFileName);
+        record.setFileSign(pactFlag+"_"+pactFlagId);
         record.setPlatform(platform);
         record.setCreateTime(date);
         save(record);
@@ -97,7 +96,7 @@ public class PactRecordServiceImpl implements PactRecordService {
      * @param pactVersionId
      * @return
      */
-    private Map<String,Object> getPactParamMapByTemplateId(Long pactVersionId,Object ... obj){
+    private Map<String,Object> getPactParamMapByTemplateId(Long pactVersionId,List params){
         Map<String, Object> resutlMap = new HashMap();
         List<Map<String, Object>> mapList = pactDictService.queryListByTemplateId(pactVersionId);
 
@@ -110,13 +109,13 @@ public class PactRecordServiceImpl implements PactRecordService {
             isMust = (Boolean) map.get("isMust");
 
             int i = counter(dictValue,'?');
-            if (obj.length < i){
-                errorInfo = "占位符与参数不匹配："+dictKey+": SQL :"+dictValue+"参数值："+obj.toString();
+            if (params.size() < i){
+                errorInfo = "占位符与参数不匹配："+dictKey+": SQL :"+dictValue+"参数值："+params.toString();
                 LOGGER.error(errorInfo);
                 throw new RRException(errorInfo);
             }
 
-            Object value = jdbcTemplate.queryForObject(dictValue,Object.class,obj);
+            String value = jdbcTemplate.queryForObject(dictValue,String.class,params.toArray());
             if (isMust){
                 errorInfo = dictKey+"，是必须参数，值不能为空！";
                 LOGGER.error(errorInfo);
@@ -137,5 +136,8 @@ public class PactRecordServiceImpl implements PactRecordService {
         return count;
     }
 
-
+    @Override
+    public Map<String, Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId) {
+        return pactRecordDao.queryPactPath(platfrom,pactFlag+"_"+pactFlagId);
+    }
 }

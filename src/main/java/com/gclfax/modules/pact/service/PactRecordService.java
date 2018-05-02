@@ -2,6 +2,8 @@ package com.gclfax.modules.pact.service;
 
 import com.gclfax.modules.pact.entity.PactRecordEntity;
 
+import java.util.Map;
+
 /**
  * 模板替换字字典
  * Created by chenmy on 2018/4/25.
@@ -13,9 +15,19 @@ public interface PactRecordService {
     /**
      * 协议生成
      * @param platform
+     * @param fileDate
      * @param pactFlag
      * @param pactFlagId
-     * @param templateId
+     * @param pactVersionId
      */
-    void pactRecordService(String platform,String pactFlag,Long pactFlagId,Long templateId,Object ... obj);
+    void pactRecordService(String platform,String fileDate,String pactFlag,Long pactFlagId,Long pactVersionId,Object ... obj);
+
+    /**
+     * 查询文件路径
+     * @param platfrom
+     * @param pactFlag
+     * @param pactFlagId
+     * @return
+     */
+    Map<String,Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId);
 }

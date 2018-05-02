@@ -58,7 +58,7 @@
     </if>
   </select>
   <select id="queryTotal" resultType="int">
-    select count(*) from t_pact_template
+    select count(1) from t_pact_template
     <where>
       <if test="platform != null">
         and `platform` =#{platform}
@@ -69,5 +69,21 @@
     </where>
   </select>
 
+  <select id="queryPactTemplate" resultType="map">
+    select a.name, a.create_time, a.platform,b.id as pactversionid,max(b.version) as version
+    from t_pact_template a left join t_pact_version b on a.id = b.pact_template_id
+    <where>
+      <if test="platform != null and platform.trim() != ''">
+        and `platform` =#{platform}
+      </if>
+      <if test="name != null and name.trim() != ''">
+        and `name` like concat('%',#{name},'%')
+      </if>
+    </where>
+      group by a.id
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
 
 </mapper>
