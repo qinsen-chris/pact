@@ -36,3 +36,5 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+    activemq:
+      broker-url: tcp://localhost:61616?jms.prefetchPolicy.all=2&jms.redeliveryPolicy.maximumRedeliveries=1

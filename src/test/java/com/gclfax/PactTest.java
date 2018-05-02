@@ -61,7 +61,7 @@ public class PactTest {
 
     @Test
     public void testPactRecordService(){
-        pactRecordService.pactRecordService(PlatformEnum.GXS_CG.getCode(), PactFlagEnum.BID.getCode(), 1000043L,9L);
+        pactRecordService.pactRecordService(PlatformEnum.GXS_CG.getCode(),"201805", PactFlagEnum.BID.getCode(), 1000043L,9L);
     }
 
 

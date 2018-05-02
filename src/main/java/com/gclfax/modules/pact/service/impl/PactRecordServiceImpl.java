@@ -80,7 +80,11 @@ public class PactRecordServiceImpl implements PactRecordService {
         Map<String, Object> resutlMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
 
         //模板占位参数转换
-        ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
+        try {
+            ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,resutlMap);
+        } catch (Exception e) {
+            LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
+        }
 
         //生成保存协议
         PactRecordEntity record = new PactRecordEntity();

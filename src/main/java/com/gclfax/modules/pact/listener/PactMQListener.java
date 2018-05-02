@@ -27,7 +27,7 @@ public class PactMQListener {
         try {
             Thread.sleep(1000);
             PactRequestVo vo = mapper.readValue(text, PactRequestVo.class);
-            pactRecordService.pactRecordService(vo.getPlatform(),vo.getPactFlag(),vo.getBusinessId(),vo.getPactVersionId(), vo.getO2mUserId());
+            pactRecordService.pactRecordService(vo.getPlatform(),vo.getFileDate(),vo.getPactFlag(),vo.getBusinessId(),vo.getPactVersionId(), vo.getO2mUserId());
 
         } catch (Exception e) {
             LOGGER.error("接收报文格式异常{}",text, e);

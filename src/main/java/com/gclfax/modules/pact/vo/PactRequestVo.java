@@ -18,6 +18,8 @@ public class PactRequestVo implements Serializable{
     private Long businessId;
     /** 转让标用户id */
     private Long o2mUserId;
+    /** 文件生成日期 */
+    private String fileDate;
 
     public Long getPactVersionId() {
         return pactVersionId;
@@ -57,5 +59,13 @@ public class PactRequestVo implements Serializable{
 
     public void setO2mUserId(Long o2mUserId) {
         this.o2mUserId = o2mUserId;
+    }
+
+    public String getFileDate() {
+        return fileDate;
+    }
+
+    public void setFileDate(String fileDate) {
+        this.fileDate = fileDate;
     }
 }

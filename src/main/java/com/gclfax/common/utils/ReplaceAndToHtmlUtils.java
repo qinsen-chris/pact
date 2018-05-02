@@ -4,6 +4,8 @@ import org.apache.poi.xwpf.converter.core.FileImageExtractor;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Iterator;
@@ -16,6 +18,8 @@ import java.util.regex.Pattern;
  * 替换word模板中的内容，并输出word和html格式的文件
  */
 public class ReplaceAndToHtmlUtils {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(ReplaceAndToHtmlUtils.class);
     /**
      * 替换word模板中的内容，并输出到目标文件中
      * @param sourceFile  源文件
@@ -37,11 +41,8 @@ public class ReplaceAndToHtmlUtils {
             doc.write(os);
             close(os);
             close(is);
-        } catch (FileNotFoundException ffe) {
-            ffe.printStackTrace();
-        }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.error("替换参数生成word异常",e);
         }
     }
 
@@ -66,11 +67,8 @@ public class ReplaceAndToHtmlUtils {
             wordToHtml(doc,targetPath,targetFileName);
 
             close(is);
-        } catch (FileNotFoundException ffe) {
-            ffe.printStackTrace();
-        }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.error("替换参数生成Html异常",e);
         }
     }
 
@@ -81,7 +79,7 @@ public class ReplaceAndToHtmlUtils {
      * @param targetFileName 目标文件名
      * @param params 替换参数
      */
-    public static void replaceAndToPdf(String sourcePath,String targetPath,String targetFileName,Map<String, Object> params){
+    public static void replaceAndToPdf(String sourcePath,String targetPath,String targetFileName,Map<String, Object> params) throws Exception {
         InputStream is = null;
         try {
             is = new FileInputStream(sourcePath);
@@ -95,12 +93,9 @@ public class ReplaceAndToHtmlUtils {
             ConvertPdf.convertPdfByXWPF(doc,targetPath,targetFileName);
 
             close(is);
-        } catch (FileNotFoundException ffe) {
-            ffe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
+        }  catch (Exception e) {
+            LOGGER.error("替换参数生成pdf异常",e);
+            throw new Exception("替换参数生成pdf异常!");
         }
     }
 
