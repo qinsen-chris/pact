@@ -84,12 +84,13 @@ function pactDict() {
 //协议模板
 function pactTemplate() {
 	$("#jqTemplateGrid").jqGrid({
-		url: baseURL + 'pactDict/list',
+		url: baseURL + 'pactTemplate/list',
 		datatype: "json",
 		colModel: [
-			{ label: '占位名ID', name: 'id', index: "id", width: 45, key: true },
-			{ label: '占位名', name: 'dictKey', width: 75 },
-			{ label: '占位值SQL', name: 'dictValue', width: 90 }
+			{ label: '版本号', name: 'id', index: "id", width: 10, key: true ,hidden:true},
+			{ label: '平台标识', name: 'platform', index: "platform", width: 30 },
+			{ label: '模板名称', name: 'name',index: "name",  width: 95 },
+			{ label: '创建时间', name: 'createTime', index: "create_time", width: 60}
 		],
 		viewrecords: true,
 		height: 385,
