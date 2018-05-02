@@ -133,9 +133,7 @@ var vm = new Vue({
 		showList: true,
 		title:null,
 		pactDict:{
-			id:null,
-			dictKey:null,
-			dictValue:null
+			
 		},
 		pactDictRelation:{
 			id:null,
@@ -241,8 +239,6 @@ var vm = new Vue({
 			}
         },
 		addContact:function(){
-        	//字典加载
-			pactDict();
 			//新增弹窗
 			layer.open({
 				type : 1,
@@ -268,10 +264,11 @@ var vm = new Vue({
 					layer.close(index);
 				}
 			});
+			//字典加载
+			pactDict();
 		},
 		addPactTemplate:function(){
-        	//模板加载
-			pactTemplate();
+        
 			//新增弹窗
 			layer.open({
 				type : 1,
@@ -297,6 +294,8 @@ var vm = new Vue({
 					layer.close(index);
 				}
 			});
+			//模板加载
+			pactTemplate();
 		},
 		dictionarySearch :function () {
 			var page = $("#jqDictGrid").jqGrid('getGridParam','page');

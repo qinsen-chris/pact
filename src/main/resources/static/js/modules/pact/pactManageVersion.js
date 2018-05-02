@@ -4,11 +4,11 @@ $(function () {
         datatype: "json",
         colModel: [
             { label: '模板id', name: 'id', index: "id", width: 20, key: true},
-			{ label: '平台标识', name: 'platform', index: "platform", width: 20 },
+			{ label: '平台标识', name: 'platform', index: "platform", width: 30 },
 			{ label: '模板名称', name: 'name',index: "name",  width: 75 },
-			{ label: '最新版本号', name: 'version',index: "version", width: 25 },
+			{ label: '最新版本号', name: 'version',index: "version", width: 30 },
 			{ label: '文件路径', name: 'pactPath',index: "pactPath", width: 95 },
-			{ label: '创建时间', name: 'createTime', index: "create_time", width: 40}
+			{ label: '创建时间', name: 'createTime', index: "create_time", width: 60}
         ],
 		viewrecords: true,
         height: 385,
@@ -83,21 +83,26 @@ var vm = new Vue({
 			platform: null,
 			name: null
 		},
+		tests:123,
 		qa:{
 		    platform: null,
-        	name: null
+        		name: null
 		},
 		showList: true,
 		title:null,
 		pact:{
-		    pactName:null,
-		    pactTemplateId:null,
-		    pactPath:null
-		    },
+			pactTemplateId:null,
+			platform:null,
+			pactName:null
+			
+		},
 		platformEnum:null,
 		importing:false,
 		importResult:false,
         pactTemplate:{}
+	},
+	mounted (){
+		
 	},
 	methods: {
 		query: function () {
@@ -246,7 +251,7 @@ var vm = new Vue({
             });
         },
         addContact:function(){
-            pactTemplate();
+            
             //新增弹窗
             layer.open({
                 type : 1,
@@ -259,19 +264,24 @@ var vm = new Vue({
                 content : jQuery("#addContacts"),
                 btn : [ '确定', '取消' ],
                 btn1 : function(index) {
+                
                     var ids=$('#jqPactGrid').jqGrid('getGridParam','selrow');
                     if(ids == null ){
                         alert("请至少选中一条数据！");
                         return;
-                    }
+                    };
                     var rowData = $('#jqPactGrid').jqGrid('getRowData',ids);
-                    vm.pact.platform = rowData.platform;
-                    vm.pact.pactName = rowData.name;
-                    //实际保存ID
-                    vm.pact.pactTemplateId = ids;
+                    console.log(rowData);
+                    vm.$set(vm.pact,"platform",rowData.platform);
+                    vm.$set(vm.pact,"pactName",rowData.name);
+                  //实际保存ID
+                    vm.$set(vm.pact,"pactTemplateId",ids);
+                    
+                    
                     layer.close(index);
-                }
+                }.bind(this)
             });
+            pactTemplate();
         },
         pactTemplateSearch :function () {
             var page = $("#jqPactGrid").jqGrid('getGridParam','page');
