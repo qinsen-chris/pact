@@ -55,13 +55,14 @@ public class PactTest {
 
     @Test
     public void testJdbcTemplate(){
-        String s = jdbcTemplate.queryForObject("select name from xiaofeng.t_bids where id = ?", String.class, 10026);
+        String s = jdbcTemplate.queryForObject("select name from xiaofeng.t_users where id = ?", String.class, 10026);
         System.out.println(s);
     }
 
     @Test
     public void testPactRecordService(){
-        pactRecordService.pactRecordService(PlatformEnum.GXS_CG.getCode(),"201805", PactFlagEnum.BID.getCode(), 1000043L,9L);
+        Map<String, Object> map = pactRecordService.pactRecordService(PlatformEnum.GXS_CG.getCode(), "201805", PactFlagEnum.BID.getCode(), 1000045L,9L);
+        System.out.println(map.toString());
     }
 
 
