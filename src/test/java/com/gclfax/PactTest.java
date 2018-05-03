@@ -61,7 +61,7 @@ public class PactTest {
 
     @Test
     public void testPactRecordService(){
-        Map<String, Object> map = pactRecordService.pactRecordService(PlatformEnum.GXS_CG.getCode(), "201805", PactFlagEnum.BID.getCode(), 1000045L,9L);
+        Map<String, Object> map = pactRecordService.pactRecordService(PlatformEnum.GXS_CG.getCode(), "201805", PactFlagEnum.BID.getCode(), 1000045L,10L);
         System.out.println(map.toString());
     }
 
