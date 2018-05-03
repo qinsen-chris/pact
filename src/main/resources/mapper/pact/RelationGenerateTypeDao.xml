@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gclfax.modules.pact.dao.RelationGenerateTypeDao" >
+
+  <insert id="save" parameterType="com.gclfax.modules.pact.entity.RelationGenerateTypeEntity" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_relation_generate_type (relation_id, bid, o2m_bid,invest,o2m_invest)
+    values (#{relationId},#{bid},#{o2mBid},#{invest}, #{o2mInvest})
+  </insert>
+  <update id="update" parameterType="com.gclfax.modules.pact.entity.RelationGenerateTypeEntity">
+    update t_relation_generate_type
+    <set>
+      <if test="relationId != null">`relation_id` = #{relationId}, </if>
+      <if test="bid != null">`bid` = #{bid}, </if>
+      <if test="o2mBid != null">`o2m_bid` = #{o2mBid}, </if>
+      <if test="invest != null">`invest` = #{invest}, </if>
+      <if test="o2mInvest != null">`o2m_invest` = #{o2mInvest}, </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteBatch">
+    delete from t_relation_generate_type where id in
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <select id="queryMapList" resultType="map">
+    select a.id,a.relation_id as relationId,a.bid,a.o2m_bid as o2mBid,a.invest,a.o2m_invest as o2mInvest,c.dict_key as dictKey,d.name
+    from t_relation_generate_type a join t_pact_dict_relation b on a.relation_id = b.id
+    join t_pact_dict c on b.pact_dict_id = c.id join t_pact_template d on b.pact_template_id = d.id
+    <where>
+      <if test="name != null and name.trim() != ''">
+        and `name` like concat('%',#{name},'%')
+      </if>
+    </where>
+    <choose>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <select id="queryTotal" resultType="int">
+    select count(1)
+    from t_relation_generate_type a join t_pact_dict_relation b on a.relation_id = b.id
+    join t_pact_dict c on b.pact_dict_id = c.id join t_pact_template d on b.pact_template_id = d.id
+    <where>
+      <if test="name != null and name.trim() != ''">
+        and `name` like concat('%',#{name},'%')
+      </if>
+    </where>
+  </select>
+
+</mapper>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>模板协议和字典关系列表</title>
+<title>生成合同与字典关系</title>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -26,12 +26,12 @@
 	<div v-show="showList">
 		<div class="grid-btn">
 			<div class="form-group col-sm-2">
-				<input type="text" class="form-control" v-model="q.username" @keyup.enter="query" placeholder="ID">
+				<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="ID">
 			</div>
 			<a class="btn btn-default" @click="query">查询</a>
-			<a v-if="hasPermission('pactDictRelation:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			<a v-if="hasPermission('pactDictRelation:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			<a v-if="hasPermission('pactDictRelation:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a v-if="hasPermission('relationGenerateType:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('relationGenerateType:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('relationGenerateType:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
@@ -41,30 +41,46 @@
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">模板版本</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="pactDictRelation.name" placeholder="模板版本" @click="addPactTemplate"/>
-			    </div>
-			</div>
-			<div class="form-group">
 			   	<div class="col-sm-2 control-label">字典</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="pactDictRelation.dictKey" placeholder="字典" @click="addContact"/>
+			      <input type="text" class="form-control" v-model="relationGenerateType.name" placeholder="模板名称"/>
+			      <input type="text" class="form-control" v-model="relationGenerateType.dictKey" placeholder="字典" @click="addContact"/>
 			    </div>
 			</div>
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">返回参数类型</div>
-			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="pactDictRelation.resultType" placeholder="返回参数类型"/>
-			    </div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">是否必输</div>
+				<div class="col-sm-2 control-label">标的协议下是否必输</div>
 				<label class="radio-inline">
-				  <input type="radio" name="isMust" value="false" v-model="pactDictRelation.isMust"/> 否
+				  <input type="radio" name="bid" value="false" v-model="relationGenerateType.bid"/> 否
 				</label>
 				<label class="radio-inline">
-				  <input type="radio" name="isMust" value="true" v-model="pactDictRelation.isMust"/> 是
+				  <input type="radio" name="bid" value="true" v-model="relationGenerateType.bid"/> 是
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">转让协议下是否必输</div>
+				<label class="radio-inline">
+				  <input type="radio" name="o2mBid" value="false" v-model="relationGenerateType.o2mBid"/> 否
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="o2mBid" value="true" v-model="relationGenerateType.o2mBid"/> 是
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">投资标的下是否必输</div>
+				<label class="radio-inline">
+				  <input type="radio" name="invest" value="false" v-model="relationGenerateType.invest"/> 否
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="invest" value="true" v-model="relationGenerateType.invest"/> 是
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">投资转让下是否必输</div>
+				<label class="radio-inline">
+				  <input type="radio" name="o2mInvest" value="false" v-model="relationGenerateType.o2mInvest"/> 否
+				</label>
+				<label class="radio-inline">
+				  <input type="radio" name="o2mInvest" value="true" v-model="relationGenerateType.o2mInvest"/> 是
 				</label>
 			</div>
 			<div class="form-group">
@@ -90,24 +106,8 @@
 			</div>
 		</form>
 	</div>
-
-	<!-- 新增模板弹窗 -->
-	<div id="addPactTemplate" style="display: none;padding:10px;">
-		<form class="form-horizontal">
-			<div class="form-group">
-				<div class="form-group">
-					<div class="col-sm-10">
-						<input type="text" class="form-control" v-model="templateQ.name" placeholder="请输入查询条件" />
-					</div>
-					<div class="col-sm-2 control-label" @click="templateSearch">查询</div>
-				</div>
-				<table id="jqTemplateGrid"></table>
-				<div id="jqTemplateGridPager"></div>
-			</div>
-		</form>
-	</div>
 </div>
-<script src="../../js/modules/pact/pactDictRelation.js"></script>
+<script src="../../js/modules/pact/relationGenerateType.js"></script>
 <script>
 
 </script>
