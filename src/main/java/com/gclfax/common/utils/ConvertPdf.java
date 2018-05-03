@@ -50,6 +50,10 @@ public class ConvertPdf {
 	 */
 	public static void convertPdfByXWPF(XWPFDocument document,String targetPath,String targetFileName) throws Exception{
 		File pdfFile=new File(targetPath+targetFileName);
+		// 检测是否存在目录
+		if (!pdfFile.getParentFile().exists()) {
+			pdfFile.getParentFile().mkdirs();
+		}
 
 		//转换pdf文件
 		if(!pdfFile.exists()){
