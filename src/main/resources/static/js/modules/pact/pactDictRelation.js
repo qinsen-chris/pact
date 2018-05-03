@@ -195,6 +195,7 @@ var vm = new Vue({
             }
 
 			var url = vm.pactDictRelation.id == null ? "pactDictRelation/save" : "pactDictRelation/update";
+
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -220,7 +221,7 @@ var vm = new Vue({
             }).trigger("reloadGrid");
 		},
         validator: function () {
-            if(isBlank(vm.pactDictRelation.pactVersionId)){
+            if(isBlank(vm.pactDictRelation.pactTemplateId)){
                 alert("模板协议必选");
                 return true;
             }

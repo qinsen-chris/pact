@@ -88,7 +88,7 @@ public class PactRecordServiceImpl implements PactRecordService {
             Map<String, Object> paramMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
             ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,paramMap);
         } catch (Exception e) {
-            LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
+            LOGGER.error("生成合同异常！platform：{}，pactFlag：{}，pactFlagId：{}",platform,pactFlag,pactFlagId,e);
             resultMap.put("result",false);
             resultMap.put("msg","生成合同异常！");
             return resultMap;
@@ -195,7 +195,7 @@ public class PactRecordServiceImpl implements PactRecordService {
             Map<String, Object> paramMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
             ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,paramMap);
         } catch (Exception e) {
-            LOGGER.error("生成合同异常！platform：{0}，pactFlag：{1}，pactFlagId：{2}",platform,pactFlag,pactFlagId,e);
+            LOGGER.error("生成合同异常！platform：{}，pactFlag：{}，pactFlagId：{}",platform,pactFlag,pactFlagId,e);
             resultMap.put("result",false);
             resultMap.put("msg","生成合同异常！");
             return resultMap;

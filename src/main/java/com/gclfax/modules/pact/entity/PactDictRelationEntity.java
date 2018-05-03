@@ -19,11 +19,11 @@ public class PactDictRelationEntity {
         this.id = id;
     }
 
-    public Long getPactVersionId() {
+    public Long getPactTemplateId() {
         return pactTemplateId;
     }
 
-    public void setPactVersionId(Long pactTemplateId) {
+    public void setPactTemplateId(Long pactTemplateId) {
         this.pactTemplateId = pactTemplateId;
     }
 
@@ -40,14 +40,14 @@ public class PactDictRelationEntity {
     }
 
     public void setResultType(String resultType) {
-        this.resultType = resultType == null ? null : resultType.trim();
+        this.resultType = resultType;
     }
 
-    public Boolean getIsMust() {
+    public Boolean getMust() {
         return isMust;
     }
 
-    public void setIsMust(Boolean isMust) {
-        this.isMust = isMust;
+    public void setMust(Boolean must) {
+        isMust = must;
     }
 }
