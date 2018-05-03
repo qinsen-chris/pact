@@ -33,10 +33,10 @@ public class ConvertPdf {
 			    options.fontProvider(fontProvider);
 			    PdfConverter.getInstance().convert(document, out, options);
 			}else{
-				System.out.println("PDF文件已存在，无需再次转换");
+				throw new RuntimeException("PDF文件已存在，无需再次转换");
 			}
 		}else{
-			System.out.println("docx不存在！");
+			throw new RuntimeException("docx不存在");
 		}
 
 	}
@@ -59,7 +59,7 @@ public class ConvertPdf {
 			options.fontProvider(fontProvider);
 			PdfConverter.getInstance().convert(document, out, options);
 		}else{
-			System.out.println("PDF文件已存在，无需再次转换");
+			throw new RuntimeException("PDF文件已存在，无需再次转换");
 		}
 	}
 
