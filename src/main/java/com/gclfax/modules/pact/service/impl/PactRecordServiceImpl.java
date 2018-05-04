@@ -11,6 +11,7 @@ import com.gclfax.modules.pact.entity.PactVersionEntity;
 import com.gclfax.modules.pact.service.PactDictService;
 import com.gclfax.modules.pact.service.PactRecordService;
 import com.gclfax.modules.pact.service.PactVersionService;
+import com.gclfax.modules.pact.service.RelationGenerateTypeService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,8 @@ public class PactRecordServiceImpl implements PactRecordService {
     private PactVersionService pactVersionService;
     @Autowired
     private PactDictService pactDictService;
+    @Autowired
+    private RelationGenerateTypeService generateTypeService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Value("${gclfax.pactPath}")
@@ -85,7 +88,7 @@ public class PactRecordServiceImpl implements PactRecordService {
 
         try {
             //模板占位参数转换
-            Map<String, Object> paramMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
+            Map<String, Object> paramMap = getPactParamMapByTemplateId(pactFlag,pactVersionEntity.getPactTemplateId(),params);
             ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,paramMap);
         } catch (Exception e) {
             LOGGER.error("生成合同异常！platform：{}，pactFlag：{}，pactFlagId：{}",platform,pactFlag,pactFlagId,e);
@@ -110,20 +113,39 @@ public class PactRecordServiceImpl implements PactRecordService {
 
     /**
      * 根据模板Id,获取替换参数
-     * @param pactVersionId
+     * @param pactTemplateId
      * @return
      */
-    private Map<String,Object> getPactParamMapByTemplateId(Long pactVersionId,List params){
+    private Map<String,Object> getPactParamMapByTemplateId(String pactFlag,Long pactTemplateId,List params){
         Map<String, Object> resutlMap = new HashMap();
-        List<Map<String, Object>> mapList = pactDictService.queryListByTemplateId(pactVersionId);
-
+        List<Map<String, Object>> mapList = pactDictService.queryListByTemplateId(pactTemplateId);
         String dictKey,dictValue,resultType,errorInfo;
-        Boolean isMust;
+        Boolean isMust,bid,o2mBid,invest,o2mInvest;
         for (Map<String, Object> map : mapList) {
             dictKey = (String) map.get("dictKey");
             dictValue = (String) map.get("dictValue");
             resultType = (String) map.get("resultType");
             isMust = (Boolean) map.get("isMust");
+            bid = (Boolean) map.get("bid");
+            o2mBid = (Boolean) map.get("o2mBid");
+            invest = (Boolean) map.get("invest");
+            o2mInvest = (Boolean) map.get("o2mInvest");
+
+            //模板参数部分替换排除
+            if (PactFlagEnum.BID.getCode().equals(pactFlag) && !bid){
+                resutlMap.put(dictKey,"");
+                continue;
+            } else if (PactFlagEnum.O2M_BID.getCode().equals(pactFlag) && !o2mBid){
+                resutlMap.put(dictKey,"");
+                continue;
+            } else if (PactFlagEnum.INVEST.getCode().equals(pactFlag) && !invest){
+                resutlMap.put(dictKey,"");
+                continue;
+            } else if (PactFlagEnum.O2M_INVEST.getCode().equals(pactFlag) && !o2mInvest){
+                resutlMap.put(dictKey,"");
+                continue;
+            }
+
 
             int i = counter(dictValue,'?');
             Object[] obj = new Object[i];
@@ -192,7 +214,7 @@ public class PactRecordServiceImpl implements PactRecordService {
 
         try {
             //模板占位参数转换
-            Map<String, Object> paramMap = getPactParamMapByTemplateId(pactVersionEntity.getPactTemplateId(),params);
+            Map<String, Object> paramMap = getPactParamMapByTemplateId(pactFlag,pactVersionEntity.getPactTemplateId(),params);
             ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targerPath,targetFileName,paramMap);
         } catch (Exception e) {
             LOGGER.error("生成合同异常！platform：{}，pactFlag：{}，pactFlagId：{}",platform,pactFlag,pactFlagId,e);
