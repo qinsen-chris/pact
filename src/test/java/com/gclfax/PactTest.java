@@ -2,6 +2,7 @@ package com.gclfax;
 
 import com.gclfax.common.constants.PactFlagEnum;
 import com.gclfax.common.constants.PlatformEnum;
+import com.gclfax.modules.pact.entity.PactRecordEntity;
 import com.gclfax.modules.pact.entity.PactVersionEntity;
 import com.gclfax.modules.pact.service.PactRecordService;
 import com.gclfax.modules.pact.service.PactVersionService;
@@ -49,7 +50,11 @@ public class PactTest {
 
     @Test
     public void testPactPath(){
-        Map<String, Object> map = pactRecordService.queryPactPath(PlatformEnum.GXS_CG.getCode(), "bid", 1L);
+        PactRecordEntity pactRecord = new PactRecordEntity();
+        pactRecord.setPlatform(PlatformEnum.GXS_CG.getCode());
+        pactRecord.setPactFlag("bid");
+        pactRecord.setPactFlagId(1L);
+        Map<String, Object> map = pactRecordService.queryPactPath(pactRecord);
         System.out.println(map);
     }
 
