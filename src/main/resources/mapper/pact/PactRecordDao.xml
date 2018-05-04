@@ -9,13 +9,10 @@
   <select id="queryPactPath" resultType="map">
     select pact_path as pactPath
     from t_pact_record
-    where platform = #{platform} and pact_flag = #{pactFlag} and pact_flag_id = #{pactFlagId}
+    where pact_flag_id = #{pactFlagId} and pact_flag = #{pactFlag} and  platform = #{platform}
+    <if test="o2mUserId != null ">
+      and o2m_user_id = #{o2mUserId}
+    </if>
   </select>
 
-
-  <select id="queryPactO2MPath" resultType="map">
-    select pact_path as pactPath
-    from t_pact_record
-    where platform = #{platform} and pact_flag = #{pactFlag} and pact_flag_id = #{pactFlagId} and o2m_user_id = #{o2mUserId}
-  </select>
 </mapper>

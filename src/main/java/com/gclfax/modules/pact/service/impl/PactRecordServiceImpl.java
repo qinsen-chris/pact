@@ -238,22 +238,8 @@ public class PactRecordServiceImpl implements PactRecordService {
         return resultMap;
     }
 
-    /**
-     * 查询“转让标”文件路径
-     *
-     * @param platfrom
-     * @param pactFlag
-     * @param pactFlagId
-     * @param o2mUserId
-     * @return
-     */
     @Override
-    public Map<String, Object> queryPactO2MPath(String platfrom, String pactFlag, Long pactFlagId, Long o2mUserId) {
-        return pactRecordDao.queryPactO2MPath(platfrom,pactFlag,pactFlagId,o2mUserId);
-    }
-
-    @Override
-    public Map<String, Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId) {
-        return pactRecordDao.queryPactPath(platfrom,pactFlag,pactFlagId);
+    public Map<String, Object> queryPactPath(PactRecordEntity pactRecord) {
+        return pactRecordDao.queryPactPath(pactRecord);
     }
 }

@@ -24,12 +24,10 @@ public interface PactRecordService {
 
     /**
      * 查询文件路径
-     * @param platfrom
-     * @param pactFlag
-     * @param pactFlagId
+     * @param requestVo
      * @return
      */
-    Map<String,Object> queryPactPath(String platfrom, String pactFlag, Long pactFlagId);
+    Map<String,Object> queryPactPath(PactRecordEntity pactRecord);
 
     /**
      * 转让标协议生成
@@ -41,12 +39,4 @@ public interface PactRecordService {
      */
     Map<String,Object> pactGenerateO2M(String platform, String fileDate, String pactFlag, Long pactFlagId, Long pactVersionId, Long o2mUserId);
 
-    /**
-     * 查询“转让标”文件路径
-     * @param platfrom
-     * @param pactFlag
-     * @param pactFlagId
-     * @return
-     */
-    Map<String,Object> queryPactO2MPath(String platfrom, String pactFlag, Long pactFlagId,Long o2mUserId);
 }

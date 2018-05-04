@@ -21,21 +21,6 @@ public class PactRequestVo implements Serializable{
     /** 文件生成日期 */
     private String fileDate;
 
-    public Long getPactVersionId() {
-        return pactVersionId;
-    }
-
-    public void setPactVersionId(Long pactVersionId) {
-        this.pactVersionId = pactVersionId;
-    }
-
-    public Long getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(Long businessId) {
-        this.businessId = businessId;
-    }
 
     public String getPlatform() {
         return platform;
@@ -45,12 +30,28 @@ public class PactRequestVo implements Serializable{
         this.platform = platform;
     }
 
+    public Long getPactVersionId() {
+        return pactVersionId;
+    }
+
+    public void setPactVersionId(Long pactVersionId) {
+        this.pactVersionId = pactVersionId;
+    }
+
     public String getPactFlag() {
         return pactFlag;
     }
 
     public void setPactFlag(String pactFlag) {
         this.pactFlag = pactFlag;
+    }
+
+    public Long getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 
     public Long getO2mUserId() {

@@ -1,6 +1,7 @@
 package com.gclfax.modules.pact.controller;
 
 import com.gclfax.common.utils.R;
+import com.gclfax.modules.pact.entity.PactRecordEntity;
 import com.gclfax.modules.pact.service.PactRecordService;
 import com.gclfax.modules.pact.service.PactTemplateService;
 import com.gclfax.modules.pact.vo.PactRequestVo;
@@ -45,8 +46,12 @@ public class PactController {
      */
     @RequestMapping(value = "/pactPath",method = RequestMethod.POST)
     public  @ResponseBody R pactPath(@RequestBody PactRequestVo requestVo){
-        Map<String,Object> map = pactRecordService.queryPactPath(requestVo.getPlatform(),requestVo.getPactFlag(),requestVo.getBusinessId());
-        if(StringUtils.isEmpty(map.get("pactPath"))){
+        PactRecordEntity query = new PactRecordEntity();
+        query.setPlatform(requestVo.getPlatform());
+        query.setPactFlag(requestVo.getPactFlag());
+        query.setPactFlagId(requestVo.getBusinessId());
+        Map<String,Object> map = pactRecordService.queryPactPath(query);
+        if(map == null || StringUtils.isEmpty(map.get("pactPath"))){
             map.put("isExist",0);
         }else{
             map.put("isExist",1);
@@ -89,8 +94,13 @@ public class PactController {
      */
     @RequestMapping(value = "/pactPathO2M",method = RequestMethod.POST)
     public  @ResponseBody R pactPathO2M(@RequestBody PactRequestVo requestVo){
-        Map<String,Object> map = pactRecordService.queryPactO2MPath(requestVo.getPlatform(),requestVo.getPactFlag(),requestVo.getBusinessId(),requestVo.getO2mUserId());
-        if(StringUtils.isEmpty(map.get("pactPath"))){
+        PactRecordEntity query = new PactRecordEntity();
+        query.setPlatform(requestVo.getPlatform());
+        query.setPactFlag(requestVo.getPactFlag());
+        query.setPactFlagId(requestVo.getBusinessId());
+        query.setO2mUserId(requestVo.getO2mUserId());
+        Map<String,Object> map = pactRecordService.queryPactPath(query);
+        if(map == null || StringUtils.isEmpty(map.get("pactPath"))){
             map.put("isExist",0);
         }else{
             map.put("isExist",1);
