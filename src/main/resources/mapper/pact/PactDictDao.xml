@@ -31,7 +31,7 @@
 
   <select id="queryListByTemplateId" resultType="map">
     select a.id,a.bid,a.o2m_bid as o2mBid,a.invest,a.o2m_invest as o2mInvest,
-           b.result_type as resultType, b.is_must as isMust,c.dict_key as dictKey,c.dict_value as dictValue,
+           b.result_type as resultType, b.is_must as isMust,c.dict_key as dictKey,c.dict_value as dictValue
     from t_relation_generate_type a join t_pact_dict_relation b on a.relation_id = b.id join t_pact_dict c on b.pact_dict_id = c.id
     where b.pact_template_id = #{id}
   </select>
