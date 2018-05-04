@@ -129,6 +129,7 @@ var vm = new Vue({
             });
 
 			$.get(baseURL + "common/platformList", function(r){
+				console.log(r)
         		vm.platformEnum = r.platformEnum;
                 for (var i = 0; i < r.platformEnum.length; i++) {
                     $("#platformSelect").append("<option value="+r.platformEnum[i]+">"+ r.platformEnum[i] + "</option>");

@@ -166,8 +166,8 @@ var vm = new Vue({
             vm.title = "修改";
 			var getRow = $('#jqGrid').getRowData(id);//获取当前的数据行
 			vm.pactDictRelation = getRow;
-			console.log(typeof getRow.isMust)
-			vm.pactDictRelation.isMust = getRow.isMust.indexOf("是") > -1;
+			
+			vm.pactDictRelation.isMust = getRow.isMust.indexOf("是") > -1?1:0;
 		},
 		del: function () {
 			var ids = getSelectedRows();
