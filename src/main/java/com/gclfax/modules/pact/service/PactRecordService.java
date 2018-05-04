@@ -24,7 +24,7 @@ public interface PactRecordService {
 
     /**
      * 查询文件路径
-     * @param requestVo
+     * @param pactRecord
      * @return
      */
     Map<String,Object> queryPactPath(PactRecordEntity pactRecord);

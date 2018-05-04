@@ -32,6 +32,11 @@
     select count(1) from t_pact_dict_relation
   </select>
 
+  <select id="isExist" resultType="int">
+    select count(1) from t_pact_dict_relation
+    where `pact_dict_id` = #{pactDictId} and `pact_template_id` = #{pactTemplateId}
+  </select>
+
   <update id="update" parameterType="com.gclfax.modules.pact.entity.PactDictRelationEntity">
     update t_pact_dict_relation
     <set>

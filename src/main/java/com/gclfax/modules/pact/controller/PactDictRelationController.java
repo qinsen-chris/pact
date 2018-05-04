@@ -33,6 +33,10 @@ public class PactDictRelationController {
     @RequestMapping("/save")
     @RequiresPermissions("pactDictRelation:save")
     public R save(@RequestBody PactDictRelationEntity pactDictRelation){
+        int count = pactDictRelationService.isExist(pactDictRelation.getPactDictId(),pactDictRelation.getPactTemplateId());
+        if(count > 0){
+            return R.error(-1,"该字典和模板已存在");
+        }
         pactDictRelationService.save(pactDictRelation);
         return R.ok();
     }
@@ -73,4 +77,5 @@ public class PactDictRelationController {
         pactDictRelationService.deleteBatch(pactIds);
         return R.ok();
     }
+
 }

@@ -47,4 +47,9 @@ public class PactDictRelationServiceImpl implements PactDictRelationService {
     public List<Map<String, Object>> queryPactDictRelationList(Map<String, Object> map) {
         return pactDictRelationDao.queryPactDictRelationList(map);
     }
+
+    @Override
+    public int isExist(Long pactDictId, Long pactTemplateId) {
+        return pactDictRelationDao.isExist(pactDictId,pactTemplateId);
+    }
 }

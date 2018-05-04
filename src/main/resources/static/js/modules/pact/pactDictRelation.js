@@ -10,7 +10,7 @@ $(function () {
 			{ label: '字典', name: 'dictKey', width: 90 },
 			{ label: '返回参数类型', name: 'resultType', width: 100 },
 			{ label: '是否必输', name: 'isMust', width: 80, formatter: function(value, options, row){
-				return value === false ?
+				return value === 0 ?
 					'<span class="label label-danger">否</span>' :
 					'<span class="label label-success">是</span>';
 			}}
@@ -143,8 +143,9 @@ var vm = new Vue({
 			pactDictId:null,
 			dictKey:null,
 			resultType:null,
-			isMust:true
-		}
+			isMust:null
+		},
+		isUpdate:false
 	},
 	methods: {
 		query: function () {
@@ -152,6 +153,7 @@ var vm = new Vue({
 		},
 		add: function(){
 			vm.showList = false;
+			vm.isUpdate= false;
 			vm.title = "新增";
 		},
 		update: function () {
@@ -160,10 +162,12 @@ var vm = new Vue({
 				return ;
 			}
 			vm.showList = false;
+			vm.isUpdate=true;
             vm.title = "修改";
 			var getRow = $('#jqGrid').getRowData(id);//获取当前的数据行
 			vm.pactDictRelation = getRow;
-			vm.pactDictRelation.isMust = (getRow.isMust == '是');
+			console.log(typeof getRow.isMust)
+			vm.pactDictRelation.isMust = getRow.isMust.indexOf("是") > -1;
 		},
 		del: function () {
 			var ids = getSelectedRows();
@@ -189,11 +193,11 @@ var vm = new Vue({
 				});
 			});
 		},
+
 		saveOrUpdate: function () {
             if(vm.validator()){
-                return ;
+                return;
             }
-
 			var url = vm.pactDictRelation.id == null ? "pactDictRelation/save" : "pactDictRelation/update";
 
 			$.ajax({

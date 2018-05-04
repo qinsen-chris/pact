@@ -43,13 +43,13 @@
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">模板版本</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="pactDictRelation.name" placeholder="模板版本" @click="addPactTemplate"/>
+			      <input type="text" class="form-control" aaa :disabled="isUpdate" v-model="pactDictRelation.name" placeholder="模板版本" @click="addPactTemplate"/>
 			    </div>
 			</div>
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">字典</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="pactDictRelation.dictKey" placeholder="字典" @click="addContact"/>
+			      <input type="text" class="form-control" aaa :disabled="isUpdate" v-model="pactDictRelation.dictKey" placeholder="字典" @click="addContact"/>
 			    </div>
 			</div>
 			<div class="form-group">
@@ -61,10 +61,10 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label">是否必输</div>
 				<label class="radio-inline">
-				  <input type="radio" name="isMust" value="false" v-model="pactDictRelation.isMust"/> 否
+				  <input type="radio" name="isMust" value="0" :checked="!pactDictRelation.isMust"/> 否
 				</label>
 				<label class="radio-inline">
-				  <input type="radio" name="isMust" value="true" v-model="pactDictRelation.isMust"/> 是
+				  <input type="radio" name="isMust" value="1" :checked="pactDictRelation.isMust"/> 是
 				</label>
 			</div>
 			<div class="form-group">
