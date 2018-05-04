@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,12 +52,15 @@ public class PactController {
         query.setPactFlag(requestVo.getPactFlag());
         query.setPactFlagId(requestVo.getBusinessId());
         Map<String,Object> map = pactRecordService.queryPactPath(query);
+
+        Map<String,Object> resultMap = new HashMap<String,Object>();
         if(map == null || StringUtils.isEmpty(map.get("pactPath"))){
-            map.put("isExist",0);
+            resultMap.put("isExist",0);
         }else{
-            map.put("isExist",1);
+            resultMap.put("isExist",1);
+            resultMap.put("pactPath",map.get("pactPath"));
         }
-        return R.ok().put("data",map);
+        return R.ok().put("data",resultMap);
     }
 
     /**
@@ -100,12 +104,15 @@ public class PactController {
         query.setPactFlagId(requestVo.getBusinessId());
         query.setO2mUserId(requestVo.getO2mUserId());
         Map<String,Object> map = pactRecordService.queryPactPath(query);
+
+        Map<String,Object> resultMap = new HashMap<String,Object>();
         if(map == null || StringUtils.isEmpty(map.get("pactPath"))){
-            map.put("isExist",0);
+            resultMap.put("isExist",0);
         }else{
-            map.put("isExist",1);
+            resultMap.put("isExist",1);
+            resultMap.put("pactPath",map.get("pactPath"));
         }
-        return R.ok().put("data",map);
+        return R.ok().put("data",resultMap);
     }
 
 }
