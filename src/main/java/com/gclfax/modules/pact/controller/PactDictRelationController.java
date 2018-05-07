@@ -47,8 +47,8 @@ public class PactDictRelationController {
     @SysLog("修改模板协议和字典关系")
     @RequestMapping("/update")
     @RequiresPermissions("pactDictRelation:update")
-    public R update(@RequestBody PactDictRelationEntity pactDictRelation){
-        pactDictRelationService.update(pactDictRelation);
+    public R update(@RequestBody Map<String, Object> map){
+        pactDictRelationService.updateMap(map);
         return R.ok();
     }
 

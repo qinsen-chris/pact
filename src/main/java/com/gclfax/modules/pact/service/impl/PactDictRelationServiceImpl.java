@@ -52,4 +52,9 @@ public class PactDictRelationServiceImpl implements PactDictRelationService {
     public int isExist(Long pactDictId, Long pactTemplateId) {
         return pactDictRelationDao.isExist(pactDictId,pactTemplateId);
     }
+
+    @Override
+    public int updateMap(Map<String, Object> map) {
+        return pactDictRelationDao.update(map);
+    }
 }

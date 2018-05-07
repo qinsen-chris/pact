@@ -37,4 +37,6 @@ public interface PactDictRelationService {
     List<Map<String,Object>> queryPactDictRelationList(Map<String,Object> map);
 
     int isExist(Long pactDictId, Long pactTemplateId);
+
+    int updateMap(Map<String, Object> map);
 }

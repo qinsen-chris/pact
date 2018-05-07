@@ -48,6 +48,6 @@ public class PactDictRelationEntity {
     }
 
     public void setMust(Boolean must) {
-        isMust = must;
+        this.isMust = must;
     }
 }
