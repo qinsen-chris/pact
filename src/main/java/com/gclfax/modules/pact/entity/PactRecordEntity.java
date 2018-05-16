@@ -7,9 +7,9 @@ public class PactRecordEntity {
 
     private String platform;
 
-    private Long pactFlagId;
+    private Long businessId;
 
-    private Long o2mUserId;
+    private Long investId;
 
     private String pactFlag;
 
@@ -49,12 +49,12 @@ public class PactRecordEntity {
         this.createTime = createTime;
     }
 
-    public Long getPactFlagId() {
-        return pactFlagId;
+    public Long getBusinessId() {
+        return businessId;
     }
 
-    public void setPactFlagId(Long pactFlagId) {
-        this.pactFlagId = pactFlagId;
+    public void setBusinessId(Long businessId) {
+        this.businessId = businessId;
     }
 
     public String getPactFlag() {
@@ -65,11 +65,11 @@ public class PactRecordEntity {
         this.pactFlag = pactFlag;
     }
 
-    public Long getO2mUserId() {
-        return o2mUserId;
+    public Long getInvestId() {
+        return investId;
     }
 
-    public void setO2mUserId(Long o2mUserId) {
-        this.o2mUserId = o2mUserId;
+    public void setInvestId(Long investId) {
+        this.investId = investId;
     }
 }

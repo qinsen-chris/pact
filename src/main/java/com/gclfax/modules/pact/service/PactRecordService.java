@@ -39,4 +39,7 @@ public interface PactRecordService {
      */
     Map<String,Object> pactGenerateO2M(String platform, String fileDate, String pactFlag, Long pactFlagId, Long pactVersionId, Long o2mUserId);
 
+    public String getPactNo(Long investId);
+
+    Map<String,Object> pactCreate(Map<String, Object> paramsMap);
 }

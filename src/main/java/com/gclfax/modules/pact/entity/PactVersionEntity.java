@@ -22,6 +22,8 @@ public class PactVersionEntity {
 
     private String platform;
 
+    private String params;
+
     public Long getId() {
         return id;
     }
@@ -84,5 +86,13 @@ public class PactVersionEntity {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
     }
 }

@@ -93,7 +93,13 @@ public class PactVersionController {
     @SysLog("修改模板")
     @RequestMapping("/update")
     public R update(@RequestBody PactVersionEntity pactTemplate){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("pactTemplateId",pactTemplate.getPactTemplateId());
+        int version = pactVersionService.selectMaxVersionByParam(params);
+        pactTemplate.setVersion(version+1);
+        pactTemplate.setCreateTime(new Date());
         pactVersionService.update(pactTemplate);
+
         return R.ok();
     }
 

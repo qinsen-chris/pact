@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +157,7 @@ public class ReplaceAndToHtmlUtils {
      * @param params 参数
      */
     private static void replaceInPara(XWPFDocument doc, Map<String, Object> params) {
+        LOGGER.info("开始替换段落里面的内容！params：" + params.toString());
         Iterator<XWPFParagraph> iterator = doc.getParagraphsIterator();
         XWPFParagraph para;
         while (iterator.hasNext()) {
@@ -164,12 +166,79 @@ public class ReplaceAndToHtmlUtils {
         }
     }
 
+
     /**
-     * 替换段落里面的变量
+     * 把XWPFParagraph中存在问题的XWPFRun，合并成正确的XWPFRun，然后在进行替换操作
      * @param para 要替换的段落
      * @param params 参数
      */
     private static void replaceInPara(XWPFParagraph para, Map<String, Object> params) {
+        List<XWPFRun> runs;
+        Matcher matcher;
+
+        if (matcher(para.getParagraphText()).find()) {
+            runs = para.getRuns();
+
+            List<Integer> startCursorList = new ArrayList<Integer>();
+            List<StringBuffer> sbList = new ArrayList<StringBuffer>();
+            for (int i=0; i<runs.size(); i++) {
+                XWPFRun run = runs.get(i);
+                String runText = run.toString();
+                //如果检测到"${" ，说明被分割，把之后相邻的3个拼接起来
+                if(runText.equals("${")){
+                    StringBuffer sb = new StringBuffer();
+                    sb.append(runs.get(i).toString())
+                            .append(runs.get(i+1).toString())
+                            .append(runs.get(i+2).toString());
+                    startCursorList.add(i);
+                    sbList.add(sb);
+                    i = i+2;
+                }
+            }
+
+            //循环删除当前下标,并插入一个新的XWPFRun
+            if(startCursorList.size() >0 ){
+                for (int i=0;i<startCursorList.size();i++){
+                    //删除当前段落第二个变量的时候，数组下标要-2.（上一个变量删除了3个，插入了一个）
+                    if(i>0){
+                        for (int j=0;j<3;j++){
+                            para.removeRun(startCursorList.get(i)-2);
+                        }
+                        para.insertNewRun(startCursorList.get(i)-2).setText(sbList.get(i).toString());
+                        continue;
+                    }
+                    //第一次的时候，
+                    //循环删除3次，同一个位置的XWPFRun
+                    for (int j=0;j<3;j++){
+                        para.removeRun(startCursorList.get(i));
+                    }
+                    para.insertNewRun(startCursorList.get(i)).setText(sbList.get(i).toString());
+                }
+            }
+
+            //重新开始循环para.getRuns()
+            runs = para.getRuns();
+            for (int i=0; i<runs.size(); i++) {
+                XWPFRun run = runs.get(i);
+                String runText = run.toString();
+                matcher = matcher(runText);
+                if (matcher.find()) {
+                    while ((matcher = matcher(runText)).find()) {
+                        LOGGER.info("匹配到一段文本XWPFRun。 runText："+runText);
+                        runText = matcher.replaceFirst(String.valueOf(params.get(matcher.group(1))));
+                    }
+                    para.removeRun(i);
+                    XWPFRun newRun = para.insertNewRun(i);
+                    newRun.setFontFamily("宋体");
+                    newRun.setText(runText);
+                    /*runs.get(i).setText(runText, 0);*/
+                }
+            }
+
+        }
+    }
+
+    private static void replaceInPara_bak(XWPFParagraph para, Map<String, Object> params) {
         List<XWPFRun> runs;
         Matcher matcher;
         if (matcher(para.getParagraphText()).find()) {
@@ -180,12 +249,12 @@ public class ReplaceAndToHtmlUtils {
                 matcher = matcher(runText);
                 if (matcher.find()) {
                     while ((matcher = matcher(runText)).find()) {
+                        LOGGER.info("匹配到一段文本XWPFRun。 runText："+runText);
                         runText = matcher.replaceFirst(String.valueOf(params.get(matcher.group(1))));
                     }
-                    //直接调用XWPFRun的setText()方法设置文本时，在底层会重新创建一个XWPFRun，把文本附加在当前文本后面，
-                    //所以我们不能直接设值，需要先删除当前run,然后再自己手动插入一个新的run。
                     para.removeRun(i);
                     para.insertNewRun(i).setText(runText);
+                    /*runs.get(i).setText(runText, 0);*/
                 }
             }
         }
@@ -197,6 +266,7 @@ public class ReplaceAndToHtmlUtils {
      * @param params 参数
      */
     private static void replaceInTable(XWPFDocument doc, Map<String, Object> params) {
+        LOGGER.info("开始替换表格里面的内容！params：" + params.toString());
         Iterator<XWPFTable> iterator = doc.getTablesIterator();
         XWPFTable table;
         List<XWPFTableRow> rows;
