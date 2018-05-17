@@ -65,28 +65,29 @@ public class ConvertPdf {
 		}
 
 		//转换pdf文件
-		if(!pdfFile.exists()){
-			OutputStream out = new FileOutputStream(targetPath+targetFileName);
-			PdfOptions options = PdfOptions.create();
+		if(pdfFile.exists()) {
+			pdfFile.delete();
+		}
+
+		OutputStream out = new FileOutputStream(targetPath+targetFileName);
+		PdfOptions options = PdfOptions.create();
 /*			ITextFontRegistry fontProvider=ITextFontRegistry.getRegistry();
-			options.fontProvider(fontProvider);*/
-			//options.fontEncoding("iso-8859-1");
+		options.fontProvider(fontProvider);*/
+		//options.fontEncoding("iso-8859-1");
 
 /*			//BaseFont font = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);
-			BaseFont font = BaseFont.createFont("/SIMYOU.TTF", BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
-			BaseFont bf=BaseFont.createFont("字体",BaseFont.CP1250, BaseFont.EMBEDDED);
-			options.fontEncoding(bf.getEncoding());*/
+		BaseFont font = BaseFont.createFont("/SIMYOU.TTF", BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+		BaseFont bf=BaseFont.createFont("字体",BaseFont.CP1250, BaseFont.EMBEDDED);
+		options.fontEncoding(bf.getEncoding());*/
 
-			/*String pactFontpath="/alidata1/runtime/data_cg/data_pact"+ "/fonts";
-			LOGGER.info("footer 字体目录:{} ",pactFontpath);
-			BaseFont bf= BaseFont.createFont(pactFontpath+"/simsun.ttc,1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);*/
+		/*String pactFontpath="/alidata1/runtime/data_cg/data_pact"+ "/fonts";
+		LOGGER.info("footer 字体目录:{} ",pactFontpath);
+		BaseFont bf= BaseFont.createFont(pactFontpath+"/simsun.ttc,1", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);*/
 
-			LOGGER.info("PdfOptions设置的字体为默认 ");
+		LOGGER.info("PdfOptions设置的字体为默认 ");
 
-			PdfConverter.getInstance().convert(document, out, options);
-		}else{
-			LOGGER.warn("PDF文件已存在，无需再次转换! FileName：" +targetFileName);
-		}
+		PdfConverter.getInstance().convert(document, out, options);
+
 	}
 
 }

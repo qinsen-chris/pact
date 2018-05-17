@@ -202,9 +202,9 @@ public class ReplaceAndToHtmlUtils {
                     //删除当前段落第二个变量的时候，数组下标要-2.（上一个变量删除了3个，插入了一个）
                     if(i>0){
                         for (int j=0;j<3;j++){
-                            para.removeRun(startCursorList.get(i)-2);
+                            para.removeRun(startCursorList.get(i)-2*i);
                         }
-                        para.insertNewRun(startCursorList.get(i)-2).setText(sbList.get(i).toString());
+                        para.insertNewRun(startCursorList.get(i)-2*i).setText(sbList.get(i).toString());
                         continue;
                     }
                     //第一次的时候，
