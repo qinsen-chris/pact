@@ -26,7 +26,7 @@
 	<div v-show="showList">
 		<div class="grid-btn">
 			<div class="form-group col-sm-2">
-				<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="ID">
+				<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="模板名称">
 			</div>
 			<a class="btn btn-default" @click="query">查询</a>
 			<a v-if="hasPermission('relationGenerateType:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
@@ -43,8 +43,8 @@
 			<div class="form-group">
 			   	<div class="col-sm-2 control-label">字典</div>
 			   	<div class="col-sm-10">
-			      <input type="text" class="form-control" v-model="relationGenerateType.name" placeholder="模板名称"/>
-			      <input type="text" class="form-control" v-model="relationGenerateType.dictKey" placeholder="字典" @click="addContact"/>
+			      <input type="text" class="form-control" v-model="relationGenerateType.name" :disabled="isModuleWrite" placeholder="模板名称" aaa/>
+			      <input type="text" class="form-control" v-model="relationGenerateType.dictKey" :disabled="isDictWrite" placeholder="字典" @click="addContact" aaa/>
 			    </div>
 			</div>
 			<div class="form-group">

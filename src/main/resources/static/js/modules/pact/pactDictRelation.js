@@ -9,8 +9,8 @@ $(function () {
 			{ label: '字典id', name: 'pactDictId', width: 90 },
 			{ label: '字典', name: 'dictKey', width: 90 },
 			{ label: '返回参数类型', name: 'resultType', width: 100 },
-			{ label: '是否必输', name: 'isMust', width: 80, formatter: function(value, options, row){
-				return value === 0 ?
+			{ label: '是否必输', name: 'must', width: 80, formatter: function(value, options, row){
+				return value === false ?
 					'<span class="label label-danger">否</span>' :
 					'<span class="label label-success">是</span>';
 			}}
@@ -143,7 +143,7 @@ var vm = new Vue({
 			pactDictId:null,
 			dictKey:null,
 			resultType:null,
-			isMust:null
+			must:true
 		},
 		isUpdate:false
 	},
@@ -167,7 +167,7 @@ var vm = new Vue({
 			var getRow = $('#jqGrid').getRowData(id);//获取当前的数据行
 			vm.pactDictRelation = getRow;
 			
-			vm.pactDictRelation.isMust = getRow.isMust.indexOf("是") > -1?1:0;
+			vm.pactDictRelation.must = getRow.must.indexOf("是") > -1 ? true : false;
 		},
 		del: function () {
 			var ids = getSelectedRows();
@@ -239,7 +239,7 @@ var vm = new Vue({
                 return true;
             }
 
-            if(isBlank(vm.pactDictRelation.isMust)){
+            if(isBlank(vm.pactDictRelation.must)){
                 alert("是否必输");
                 return true;
 			}

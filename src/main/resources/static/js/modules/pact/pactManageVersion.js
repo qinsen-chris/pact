@@ -6,7 +6,9 @@ $(function () {
             { label: '模板id', name: 'id', index: "id", width: 20, key: true},
 			{ label: '平台标识', name: 'platform', index: "platform", width: 30 },
 			{ label: '模板名称', name: 'name',index: "name",  width: 75 },
+			{ label: '模板名称', name: 'pactName', index: "pactName", width: 10,hidden:true},
 			{ label: '最新版本号', name: 'version',index: "version", width: 30 },
+			{ label: '模板占位参数', name: 'params',index: "params",  width: 120 },
 			{ label: '文件路径', name: 'pactPath',index: "pactPath", width: 95 },
 			{ label: '创建时间', name: 'createTime', index: "create_time", width: 60}
         ],
@@ -46,11 +48,11 @@ function pactTemplate() {
 		colModel: [
             { label: '版本号', name: 'id', index: "id", width: 10, key: true ,hidden:true},
 			{ label: '平台标识', name: 'platform', index: "platform", width: 30 },
-			{ label: '模板名称', name: 'name',index: "name",  width: 95 },
+			{ label: '模板名称', name: 'name',index: "name",  width: 125 },
 			{ label: '创建时间', name: 'createTime', index: "create_time", width: 60}
 		],
 		viewrecords: true,
-		height: 385,
+		height: 500,
 		rowNum: 10,
 		rowList : [10,30,50],
 		rownumbers: true,
@@ -93,6 +95,7 @@ var vm = new Vue({
 		pact:{
 			pactTemplateId:null,
 			platform:null,
+			params:null,
 			pactName:null
 			
 		},
@@ -100,9 +103,6 @@ var vm = new Vue({
 		importing:false,
 		importResult:false,
         pactTemplate:{}
-	},
-	mounted (){
-		
 	},
 	methods: {
 		query: function () {
@@ -119,7 +119,6 @@ var vm = new Vue({
 		update: function () {
 			var pactId = getSelectedRow();
 			if(pactId == null){
-			    alert("文档数据有问题，id不能为空！");
 				return ;
 			}
 			var getRow = $('#jqGrid').getRowData(pactId);//获取当前的数据行
@@ -202,7 +201,10 @@ var vm = new Vue({
                 alert("平台标识不能为空");
                 return true;
             }
-
+            if(isBlank(vm.pact.params)){
+                alert("占位参数不能为空");
+                return true;
+            }
             if(vm.pact.pactName == null && isBlank(vm.pact.pactName)){
                 alert("文档名称不能为空");
                 return true;
@@ -257,8 +259,8 @@ var vm = new Vue({
                 type : 1,
                 offset : '150px',
                 skin : 'layui-layer-molv',
-                title : "新增字典",
-                area : [ '600px', '350px' ],
+                title : "选择模板",
+                area : [ '750px', '520px' ],
                 shade : 0,
                 shadeClose : false,
                 content : jQuery("#addContacts"),
@@ -270,6 +272,11 @@ var vm = new Vue({
                         alert("请至少选中一条数据！");
                         return;
                     };
+                    var rows = $('#jqPactGrid').jqGrid('getGridParam','selarrrow');
+                    if(rows.length >1){
+                        alert("请选中一条数据！");
+                        return;
+                    }
                     var rowData = $('#jqPactGrid').jqGrid('getRowData',ids);
                     console.log(rowData);
                     vm.$set(vm.pact,"platform",rowData.platform);

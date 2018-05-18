@@ -114,7 +114,9 @@ var vm = new Vue({
 			o2mInvest:true,
 			name:null,
 			dictKey:null
-		}
+		},
+		isModuleWrite:false,
+		isDictWrite:false
 	},
 	methods: {
 		query: function () {
@@ -124,6 +126,7 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.relationGenerateType.id = null;
+			vm.isModuleWrite=true;
 		},
 		update: function () {
 			var id = getSelectedRow();
@@ -134,6 +137,8 @@ var vm = new Vue({
             vm.title = "修改";
 			var getRow = $('#jqGrid').getRowData(id);//获取当前的数据行
 			vm.relationGenerateType = getRow;
+			vm.isModuleWrite=true;
+			vm.isDictWrite=true;
 		},
 		del: function () {
 			var ids = getSelectedRows();

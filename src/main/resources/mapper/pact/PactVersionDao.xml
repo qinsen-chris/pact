@@ -2,22 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.gclfax.modules.pact.dao.PactVersionDao" >
 
-  <resultMap id="BaseResultMap" type="com.gclfax.modules.pact.entity.PactVersionEntity" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="pact_name" property="pactName" jdbcType="VARCHAR" />
-    <result column="pact_path" property="pactPath" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="pact_template_id" property="pactTemplateId" jdbcType="BIGINT" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-  </resultMap>
-
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactVersionEntity" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_pact_version (pact_name, create_time, pact_template_id ,pact_path,version)
-    values (#{pactName}, #{createTime}, #{pactTemplateId},#{pactPath},#{version})
+    insert into t_pact_version (pact_name, create_time, pact_template_id ,pact_path,version,params)
+    values (#{pactName}, #{createTime}, #{pactTemplateId},#{pactPath},#{version},#{params})
   </insert>
 
+  <update id="update" parameterType="com.gclfax.modules.pact.entity.PactVersionEntity">
+    update t_pact_version
+    <set>
+      <if test="pactPath != null">`pact_path` = #{pactPath}, </if>
+      <if test="pactTemplateId != null">`pact_template_id` = #{pactTemplateId}, </if>
+      <if test="pactName != null">`pact_name` = #{pactName}, </if>
+      <if test="version != null">`version` = #{version}, </if>
+      <if test="params != null">`params` = #{params}, </if>
+    </set>
+    where id = #{id}
+  </update>
+
   <select id="queryObject" resultType="com.gclfax.modules.pact.entity.PactVersionEntity">
-    select id, pact_path, create_time, pact_template_id
+    select id, pact_path, create_time, pact_template_id,params
     from t_pact_version
     where id = #{id}
   </select>
@@ -43,7 +46,7 @@
 
 
   <select id="queryList" resultType="com.gclfax.modules.pact.entity.PactVersionEntity">
-    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time,a.version
+    SELECT b.platform,b.`name`,a.id,a.pact_path,a.create_time,a.version,a.params,a.pact_name
     FROM t_pact_version a
     LEFT JOIN t_pact_template b on a.pact_template_id = b.id
     <where>

@@ -3,16 +3,18 @@
 <mapper namespace="com.gclfax.modules.pact.dao.PactRecordDao" >
 
   <insert id="save" parameterType="com.gclfax.modules.pact.entity.PactRecordEntity" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_pact_record (platform, pact_flag, pact_flag_id,o2m_user_id,pact_path,create_time)
-    values (#{platform}, #{pactFlag},#{pactFlagId},#{o2mUserId}, #{pactPath},#{createTime})
+    insert into t_pact_record (platform, pact_flag, business_id,invest_id,pact_path,create_time)
+    values (#{platform}, #{pactFlag},#{businessId},#{investId}, #{pactPath},#{createTime})
   </insert>
   <select id="queryPactPath" resultType="map">
     select pact_path as pactPath
     from t_pact_record
-    where pact_flag_id = #{pactFlagId} and pact_flag = #{pactFlag} and  platform = #{platform}
-    <if test="o2mUserId != null ">
-      and o2m_user_id = #{o2mUserId}
+    where business_id = #{businessId} and pact_flag = #{pactFlag} and  platform = #{platform}
+    <if test="investId != null ">
+      and invest_id = #{investId}
     </if>
+    order by id desc
+    limit 1
   </select>
 
 </mapper>

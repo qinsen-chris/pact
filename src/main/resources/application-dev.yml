@@ -4,9 +4,10 @@ spring:
         driverClassName: com.mysql.jdbc.Driver
         druid:
             first:  #数据源1
-                url: jdbc:mysql://58.213.91.96:29002/gxs_pact?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                #url: jdbc:mysql://58.213.91.96:29002/gxs_pact?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                url: jdbc:mysql://localhost:3306/gxs_pact?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: qinsen
-                password: qspassword
+                password: 123456
             second:  #数据源2
                 url: jdbc:mysql://58.213.91.96:29002/gxs_pact?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: qinsen
@@ -38,3 +39,7 @@ spring:
                         multi-statement-allow: true
     activemq:
       broker-url: tcp://localhost:61616?jms.prefetchPolicy.all=2&jms.redeliveryPolicy.maximumRedeliveries=1
+
+log:
+  path: /alidata/logs/pact
+  level: INFO

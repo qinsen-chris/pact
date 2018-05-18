@@ -45,7 +45,8 @@ var vm = new Vue({
 		showList: true,
 		title:null,
 		pact:{
-		}
+		},
+		platformEnum:{}
 
 	},
 	methods: {
@@ -63,14 +64,16 @@ var vm = new Vue({
 		update: function () {
 			var pactId = getSelectedRow();
 			if(pactId == null){
-			    alert("文档数据有问题，id不能为空！");
 				return ;
 			}
 			var getRow = $('#jqGrid').getRowData(pactId);//获取当前的数据行
 			vm.showList = false;
             vm.title = "修改";
 			vm.pact = getRow;
-			vm.getPactTemplate();
+			//vm.getPactTemplate();
+
+			vm.selectpickerfunc();
+			$("#platformSelect").selectpicker('val',vm.pact.platform);
 		},
 		del: function () {
 			var pactIds = getSelectedRows();
@@ -97,6 +100,7 @@ var vm = new Vue({
 			});
 		},
 		saveOrUpdate: function () {
+		    vm.pact.platform = $("#platformSelect").val();
             if(vm.validator()){
                 return ;
             }
@@ -124,20 +128,25 @@ var vm = new Vue({
 			});
 		},
 		selectpickerfunc:function(){
-		    $("#platformSelect").selectpicker({
-		        noneSelectedText : '请选择'
-            });
-
-			$.get(baseURL + "common/platformList", function(r){
-				console.log(r)
-        		vm.platformEnum = r.platformEnum;
-                for (var i = 0; i < r.platformEnum.length; i++) {
-                    $("#platformSelect").append("<option value="+r.platformEnum[i]+">"+ r.platformEnum[i] + "</option>");
-                }
-            });
-            //$("#platformSelect").selectpicker();
-            $("#platformSelect").selectpicker('refresh');
-            $("#platformSelect").selectpicker('render');
+		   
+			$.ajax({  
+		          type : "get",  
+		          url : baseURL + "common/platformList",  
+		          async : false,  
+		          success : function(r){  
+		        	  console.log(r)
+	        			vm.platformEnum = r.platformEnum;
+		          }  
+		    });  
+			
+			vm.$nextTick(function(){
+				$("#platformSelect").selectpicker({
+			        noneSelectedText : '请选择'
+	            });
+				$("#platformSelect").selectpicker('refresh');
+	            $("#platformSelect").selectpicker('render');
+			})
+            
 		},
 		reload: function () {
 			vm.showList = true;

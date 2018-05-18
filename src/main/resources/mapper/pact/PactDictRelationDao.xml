@@ -19,9 +19,9 @@
       b.dict_key as dictKey, c.name 
     from t_pact_dict_relation a JOIN t_pact_dict b ON a.pact_dict_id = b.id JOIN t_pact_template c ON a.pact_template_id = c.id
     <choose>
-      <when test="sidx != null and sidx.trim() != ''">
-        order by ${sidx} ${order}
-      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
     </choose>
     <if test="offset != null and limit != null">
       limit #{offset}, #{limit}

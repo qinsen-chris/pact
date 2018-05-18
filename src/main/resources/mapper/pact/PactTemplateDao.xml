@@ -74,7 +74,7 @@
     from t_pact_template a left join t_pact_version b on a.id = b.pact_template_id
     <where>
       <if test="platform != null and platform.trim() != ''">
-        and `platform` =#{platform}
+        and a.platform =#{platform}
       </if>
     </where>
       group by a.id

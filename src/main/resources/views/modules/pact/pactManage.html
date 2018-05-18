@@ -53,9 +53,11 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label">平台标识</div>
 				<div class="col-sm-10">
+					<!-- <select id="platformSelect" class="form-control selectpicker">
+						<option v-for="item in platformEnum">123</option>
+					</select> -->
 					<select id="platformSelect" class="form-control selectpicker">
-						<template v-for="item in platformEnum">
-						</template>
+						<option v-for="item in platformEnum" :value="item">{{item}}</option>
 					</select>
 				</div>
 			</div>
