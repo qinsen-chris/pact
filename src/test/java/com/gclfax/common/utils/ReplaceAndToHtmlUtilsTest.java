@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +27,37 @@ public class ReplaceAndToHtmlUtilsTest {
 
     @Test
     public void replaceAndToPdf() throws Exception {
-        String filePath = "D:\\project-gxs\\需求\\work导入1053\\模板\\08转让协议\\债权转让及受让合同模板.docx";
-        String targetPath = "D:\\project-gxs\\需求\\work导入1053\\模板\\08转让协议\\";
-        String targetFileName = "债权转让及受让合同模板.pdf";
+        String filePath = "D:\\project-gxs\\需求\\work导入1053\\模板\\04买入转售\\买入返售-代发标模板.docx";
+        String targetPath = "D:\\project-gxs\\需求\\work导入1053\\模板\\04买入转售\\";
+        String targetFileName = "买入返售-代发标模板.pdf";
 
+        Map<String, Object> params = getStringObjectMap();
+
+        ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targetPath,targetFileName,params);
+    }
+
+    @Test
+    public void replaceAndToPdfByOneThread() throws Exception {
+        String filePath = "D:\\project-gxs\\需求\\work导入1053\\模板\\04买入转售\\买入返售-代发标模板.docx";
+        String targetPath = "D:\\project-gxs\\需求\\work导入1053\\模板\\04买入转售\\";
+        //String targetFileName = "买入返售-代发标模板.pdf";
+
+        Map<String, Object> params = getStringObjectMap();
+
+        String targetFileName = "买入返售-代发标模板";
+        int pdfNum = 50 ;
+        long startTime = new Date().getTime();
+        for (int i=0;i<pdfNum;i++){
+            String newFileName = "";
+            newFileName = targetFileName+i+".pdf";
+            ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targetPath,newFileName,params);
+        }
+        long endTime = new Date().getTime();
+        System.out.println("生成pdf文件共消耗时间为："+(endTime - startTime) +"毫秒");
+
+    }
+
+    private Map<String, Object> getStringObjectMap() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("contractNo", "GXS-001-X001");
         params.put("firstParty", "中国人民解放军");
@@ -80,9 +108,15 @@ public class ReplaceAndToHtmlUtilsTest {
 
         //债权转让及受让合同
         params.put("firstPartyUserName", "firstPartyUserNamesss");
+        return params;
+    }
 
+    class  MyThread extends Thread{
 
-        ReplaceAndToHtmlUtils.replaceAndToPdf(filePath,targetPath,targetFileName,params);
+        @Override
+        public void run(){
+
+        }
     }
 
     @Test
